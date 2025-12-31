@@ -189,6 +189,18 @@ export const productsService = {
       };
     }
   },
+
+  getLowStock: async () => {
+    try {
+      const response = await api.get('/api/products/alerts/low-stock');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al obtener productos con stock bajo'
+      };
+    }
+  },
 };
 
 // Orders Service
@@ -225,6 +237,77 @@ export const ordersService = {
       return {
         success: false,
         error: error.response?.data?.detail || 'Error al crear pedido'
+      };
+    }
+  },
+
+  getDailyStats: async (targetDate = null) => {
+    try {
+      const url = targetDate 
+        ? `/api/orders/stats/daily?target_date=${targetDate}`
+        : '/api/orders/stats/daily';
+      const response = await api.get(url);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al obtener estadísticas'
+      };
+    }
+  },
+
+  getPendingSummary: async () => {
+    try {
+      const response = await api.get('/api/orders/stats/pending-summary');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al obtener resumen de pendientes'
+      };
+    }
+  },
+
+  getMonthlyStats: async (year = null, month = null) => {
+    try {
+      let url = '/api/orders/stats/monthly';
+      if (year && month) {
+        url += `?year=${year}&month=${month}`;
+      }
+      const response = await api.get(url);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al obtener estadísticas mensuales'
+      };
+    }
+  },
+
+  exportSummaryPDF: async () => {
+    try {
+      const response = await api.get('/api/orders/export/summary-pdf', {
+        responseType: 'blob'
+      });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al exportar PDF'
+      };
+    }
+  },
+
+  exportSummaryExcel: async () => {
+    try {
+      const response = await api.get('/api/orders/export/summary-excel', {
+        responseType: 'blob'
+      });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al exportar Excel'
       };
     }
   },

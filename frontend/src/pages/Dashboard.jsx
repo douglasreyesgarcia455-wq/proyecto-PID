@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
+import SummaryModal from '../components/SummaryModal';
+import { useState } from 'react';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showSummary, setShowSummary] = useState(false);
 
   // Define permissions based on role
   const permissions = {
@@ -95,12 +98,23 @@ const Dashboard = () => {
       <div className="max-w-6xl mx-auto">
         {/* Welcome Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">
-            Bienvenido, {user?.username}
-          </h2>
-          <p className="text-gray-600">
-            Rol: <span className="font-semibold capitalize">{user?.rol}</span>
-          </p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                Bienvenido, {user?.username}
+              </h2>
+              <p className="text-gray-600">
+                Rol: <span className="font-semibold capitalize">{user?.rol}</span>
+              </p>
+            </div>
+            {/* Botón Resumen */}
+            <button
+              onClick={() => setShowSummary(true)}
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-8 py-4 rounded-lg shadow-lg transition transform hover:scale-105 font-bold text-lg"
+            >
+              📊 Ver Resumen
+            </button>
+          </div>
         </div>
 
         {/* Menu Grid */}
@@ -141,6 +155,9 @@ const Dashboard = () => {
             )}
           </ul>
         </div>
+
+        {/* Summary Modal */}
+        <SummaryModal isOpen={showSummary} onClose={() => setShowSummary(false)} />
       </div>
     </Layout>
   );
