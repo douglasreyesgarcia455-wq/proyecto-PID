@@ -1,5 +1,5 @@
 """Dependencies for FastAPI routes"""
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from src.core.database import get_db
@@ -10,6 +10,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 def get_current_user(
+    request: Request,
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> Usuario:
@@ -53,6 +54,10 @@ def get_current_user(
         raise HTTPException(status_code=400, detail="Inactive user")
     
     print(f"[DEBUG] User authenticated: {user.username}")
+    
+    # Store user in request state for audit middleware
+    request.state.user = user
+    
     return user
 
 

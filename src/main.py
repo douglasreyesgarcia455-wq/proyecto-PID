@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.config.settings import get_settings
+from src.core.audit_middleware import AuditMiddleware
 from src.modules.auth.routes import router as auth_router
 from src.modules.users.routes import router as users_router
 from src.modules.products.routes import router as products_router
@@ -17,7 +18,7 @@ app = FastAPI(
     debug=settings.DEBUG
 )
 
-# CORS middleware
+# CORS middleware (must be first)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Configure properly in production
@@ -25,6 +26,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Audit middleware (logs all requests)
+app.add_middleware(AuditMiddleware)
 
 # Include routers
 app.include_router(auth_router)
