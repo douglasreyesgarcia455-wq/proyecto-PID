@@ -1,5 +1,6 @@
 """Payment business logic"""
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from fastapi import HTTPException
 from src.modules.payments.model import Pago
 from src.modules.payments.schema import PaymentCreate
@@ -35,12 +36,19 @@ class PaymentService:
         if order.estado == "pagado":
             raise HTTPException(status_code=400, detail="Order is already fully paid")
         
+        # Use database function to calculate pending amount (accurate calculation)
+        result = db.execute(
+            text("SELECT calcular_monto_pendiente(:order_id)"),
+            {"order_id": payment_data.pedido_id}
+        ).scalar()
+        
+        monto_pendiente = Decimal(str(result))
+        
         # Check if payment exceeds remaining amount
-        remaining = order.total - order.total_pagado
-        if payment_data.monto > remaining:
+        if payment_data.monto > monto_pendiente:
             raise HTTPException(
                 status_code=400,
-                detail=f"Payment amount exceeds remaining balance. Remaining: {remaining}"
+                detail=f"Payment amount (${payment_data.monto}) exceeds remaining balance (${monto_pendiente})"
             )
         
         # Create payment
@@ -50,11 +58,13 @@ class PaymentService:
         # Update order total_pagado
         order.total_pagado += payment_data.monto
         
+        # Update order status if fully paid
+        new_pending = monto_pendiente - payment_data.monto
+        if new_pending <= Decimal('0.01'):  # Consider paid if less than 1 cent pending
+            order.estado = "pagado"
+        
         db.commit()
         db.refresh(db_payment)
-        
-        # Check and update order status
-        OrderService.check_and_update_order_status(db, order.id)
         
         return db_payment
     

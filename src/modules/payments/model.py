@@ -12,6 +12,7 @@ class Pago(Base):
     pedido_id = Column(Integer, ForeignKey("pedidos.id"), nullable=False)
     monto = Column(Numeric, nullable=False)
     cuenta_origen = Column(String(100), nullable=False)
+    codigo_transfermovil = Column(String(100), nullable=True)
     fecha_pago = Column(DateTime, default=datetime.utcnow, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     

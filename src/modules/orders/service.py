@@ -5,6 +5,7 @@ from src.modules.orders.model import Pedido, DetallePedido
 from src.modules.orders.schema import OrderCreate, OrderUpdate
 from src.modules.products.model import Producto
 from src.modules.clients.model import Cliente
+from src.modules.payments.model import Pago
 from datetime import datetime
 from decimal import Decimal
 
@@ -47,23 +48,28 @@ class OrderService:
                     detail=f"Insufficient stock for product '{producto.nombre}'. Available: {producto.stock}"
                 )
             
-            subtotal = Decimal(str(producto.precio_venta)) * detalle.cantidad
+            # Use provided price or product price
+            precio = detalle.precio_unitario if detalle.precio_unitario else Decimal(str(producto.precio_venta))
+            subtotal = precio * detalle.cantidad
             total += subtotal
             
             detalles_to_create.append({
                 "producto_id": detalle.producto_id,
                 "cantidad": detalle.cantidad,
-                "precio_unitario": producto.precio_venta,
+                "precio_unitario": precio,
                 "subtotal": subtotal,
                 "producto": producto
             })
         
         # Create order
+        estado_inicial = "pagado" if order_data.pago_inmediato else "pendiente"
+        total_pagado_inicial = total if order_data.pago_inmediato else Decimal(0)
+        
         db_order = Pedido(
             cliente_id=order_data.cliente_id,
-            estado="pendiente",
+            estado=estado_inicial,
             total=total,
-            total_pagado=Decimal(0)
+            total_pagado=total_pagado_inicial
         )
         db.add(db_order)
         db.flush()
@@ -79,6 +85,17 @@ class OrderService:
             
             # Update product stock
             producto.stock -= detalle_data["cantidad"]
+        
+        # Create payment if pago_inmediato
+        if order_data.pago_inmediato and order_data.pago:
+            db_pago = Pago(
+                pedido_id=db_order.id,
+                monto=order_data.pago.monto,
+                cuenta_origen=order_data.pago.cuenta_origen,
+                codigo_transfermovil=order_data.pago.codigo_transfermovil,
+                fecha_pago=datetime.utcnow()
+            )
+            db.add(db_pago)
         
         db.commit()
         db.refresh(db_order)

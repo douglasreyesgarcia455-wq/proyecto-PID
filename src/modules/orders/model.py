@@ -19,8 +19,9 @@ class Pedido(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
     # Relationships
+    cliente = relationship("Cliente", back_populates="pedidos")
     detalles = relationship("DetallePedido", back_populates="pedido", cascade="all, delete-orphan")
-    pagos = relationship("Pago", back_populates="pedido")
+    pagos = relationship("Pago", back_populates="pedido", cascade="all, delete-orphan")
 
 
 class DetallePedido(Base):

@@ -11,7 +11,14 @@ class DetalleBase(BaseModel):
 
 
 class DetalleCreate(DetalleBase):
-    pass
+    precio_unitario: Optional[Decimal] = None  # Optional, se tomará del producto si no se provee
+
+
+class PagoInmediato(BaseModel):
+    """Payment data for immediate payment"""
+    monto: Decimal
+    cuenta_origen: str
+    codigo_transfermovil: str = Field(..., alias="codigo_transfermovil")
 
 
 class DetalleResponse(DetalleBase):
@@ -31,6 +38,8 @@ class OrderBase(BaseModel):
 
 class OrderCreate(OrderBase):
     detalles: List[DetalleCreate] = Field(..., min_length=1)
+    pago_inmediato: bool = False
+    pago: Optional[PagoInmediato] = None
 
 
 class OrderUpdate(BaseModel):
