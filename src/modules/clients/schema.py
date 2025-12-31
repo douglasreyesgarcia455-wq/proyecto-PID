@@ -1,12 +1,20 @@
 """Client schemas"""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 from typing import Optional, List
 
 
 class ContactoBase(BaseModel):
-    tipo: str = Field(..., pattern="^(telefono|email)$")
+    tipo: str = Field(..., description="Tipo de contacto: telefono o email")
     valor: str = Field(..., min_length=1, max_length=100)
+    
+    @field_validator('tipo')
+    @classmethod
+    def normalize_tipo(cls, v: str) -> str:
+        """Normalize tipo to lowercase"""
+        if v.lower() not in ['telefono', 'email']:
+            raise ValueError("tipo must be 'telefono' or 'email'")
+        return v.lower()
 
 
 class ContactoCreate(ContactoBase):

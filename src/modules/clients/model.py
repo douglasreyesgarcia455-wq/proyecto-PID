@@ -21,6 +21,7 @@ class Cliente(Base):
     
     # Relationships
     contactos = relationship("ContactoCliente", back_populates="cliente", cascade="all, delete-orphan")
+    pedidos = relationship("Pedido", back_populates="cliente", cascade="all, delete-orphan")
 
 
 class ContactoCliente(Base):
