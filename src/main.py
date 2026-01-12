@@ -10,6 +10,7 @@ from src.modules.clients.routes import router as clients_router
 from src.modules.orders.routes import router as orders_router
 from src.modules.payments.routes import router as payments_router
 from src.modules.audit.routes import router as audit_router
+from src.modules.devoluciones.routes import router as devoluciones_router
 
 settings = get_settings()
 
@@ -38,6 +39,7 @@ app.include_router(clients_router)
 app.include_router(orders_router)
 app.include_router(payments_router)
 app.include_router(audit_router)
+app.include_router(devoluciones_router)
 
 
 @app.get("/")

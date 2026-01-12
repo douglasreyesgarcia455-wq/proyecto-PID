@@ -51,6 +51,9 @@ const ClientsPage = () => {
   const [totalClients, setTotalClients] = useState(0);
   const itemsPerPage = 10;
 
+  // Search filter
+  const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     loadClients();
   }, [currentPage]);
@@ -315,6 +318,19 @@ const ClientsPage = () => {
     }
   };
 
+  // Filter clients based on search term
+  const filteredClients = clients.filter(client => {
+    if (!searchTerm) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      client.nombre?.toLowerCase().includes(search) ||
+      client.municipio?.toLowerCase().includes(search) ||
+      client.provincia?.toLowerCase().includes(search) ||
+      client.localidad?.toLowerCase().includes(search) ||
+      client.id?.toString().includes(search)
+    );
+  });
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto">
@@ -354,6 +370,35 @@ const ClientsPage = () => {
               <span className="text-xl">+</span>
               Añadir Cliente
             </button>
+
+            {/* Search Filter */}
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="🔍 Buscar por nombre, municipio, provincia o ID..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <svg
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              {searchTerm && (
+                <p className="text-sm text-gray-600 mt-2">
+                  {filteredClients.length} cliente{filteredClients.length !== 1 ? 's' : ''} encontrado{filteredClients.length !== 1 ? 's' : ''}
+                </p>
+              )}
+            </div>
             
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="bg-blue-600 text-white px-6 py-4">
@@ -365,9 +410,9 @@ const ClientsPage = () => {
                   <div className="p-8 text-center text-gray-500">
                     Cargando clientes...
                   </div>
-                ) : clients.length === 0 ? (
+                ) : filteredClients.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">
-                    No se encontraron clientes
+                    {searchTerm ? '🔍 No se encontraron clientes que coincidan con tu búsqueda' : 'No se encontraron clientes'}
                   </div>
                 ) : (
                   <table className="w-full">
@@ -388,7 +433,7 @@ const ClientsPage = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {clients.map((client) => (
+                      {filteredClients.map((client) => (
                         <tr
                           key={client.id}
                           onClick={() => handleSelectClient(client)}

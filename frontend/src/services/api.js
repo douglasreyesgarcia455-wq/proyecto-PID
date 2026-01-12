@@ -443,4 +443,43 @@ export const auditService = {
   },
 };
 
+// Devoluciones Service
+export const devolucionesService = {
+  crear: async (devolucionData) => {
+    try {
+      const response = await api.post('/api/devoluciones/', devolucionData);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al crear devolución'
+      };
+    }
+  },
+
+  obtenerPorPedido: async (pedidoId) => {
+    try {
+      const response = await api.get(`/api/devoluciones/pedido/${pedidoId}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al obtener devolución'
+      };
+    }
+  },
+
+  listar: async (skip = 0, limit = 100) => {
+    try {
+      const response = await api.get(`/api/devoluciones/?skip=${skip}&limit=${limit}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Error al obtener devoluciones'
+      };
+    }
+  },
+};
+
 export default api;

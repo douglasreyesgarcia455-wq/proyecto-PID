@@ -9,7 +9,7 @@ from src.core.deps import require_role
 from src.modules.orders.schema import OrderCreate, OrderUpdate, OrderResponse
 from src.modules.orders.service import OrderService
 from src.modules.orders.stats_service import StatsService
-from src.modules.orders.export_service import ExportService
+# from src.modules.orders.export_service import ExportService  # Temporalmente deshabilitado
 
 router = APIRouter(prefix="/api/orders", tags=["orders"])
 
@@ -86,45 +86,47 @@ def get_monthly_stats(
     return StatsService.get_monthly_sales(db, year, month)
 
 
-@router.get("/export/summary-pdf")
-def export_summary_pdf(
-    db: Session = Depends(get_db),
-    current_user = Depends(require_role(["admin", "supervisor", "vendedor"]))
-):
-    """Export summary report to PDF"""
-    # Get all data
-    stats = StatsService.get_daily_sales(db)
-    low_stock = StatsService.get_low_stock_products(db)
-    pending_summary = StatsService.get_pending_orders_summary(db)
-    
-    # Generate PDF
-    pdf_buffer = ExportService.generate_summary_pdf(stats, low_stock, pending_summary)
-    
-    # Return as downloadable file
-    return StreamingResponse(
-        pdf_buffer,
-        media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename=resumen_{date.today().isoformat()}.pdf"}
-    )
+# Temporalmente deshabilitado - requiere reportlab
+# @router.get("/export/summary-pdf")
+# def export_summary_pdf(
+#     db: Session = Depends(get_db),
+#     current_user = Depends(require_role(["admin", "supervisor", "vendedor"]))
+# ):
+#     """Export summary report to PDF"""
+#     # Get all data
+#     stats = StatsService.get_daily_sales(db)
+#     low_stock = StatsService.get_low_stock_products(db)
+#     pending_summary = StatsService.get_pending_orders_summary(db)
+#     
+#     # Generate PDF
+#     pdf_buffer = ExportService.generate_summary_pdf(stats, low_stock, pending_summary)
+#     
+#     # Return as downloadable file
+#     return StreamingResponse(
+#         pdf_buffer,
+#         media_type="application/pdf",
+#         headers={"Content-Disposition": f"attachment; filename=resumen_{date.today().isoformat()}.pdf"}
+#     )
 
 
-@router.get("/export/summary-excel")
-def export_summary_excel(
-    db: Session = Depends(get_db),
-    current_user = Depends(require_role(["admin", "supervisor", "vendedor"]))
-):
-    """Export summary report to Excel"""
-    # Get all data
-    stats = StatsService.get_daily_sales(db)
-    low_stock = StatsService.get_low_stock_products(db)
-    pending_summary = StatsService.get_pending_orders_summary(db)
-    
-    # Generate Excel
-    excel_buffer = ExportService.generate_summary_excel(stats, low_stock, pending_summary)
-    
-    # Return as downloadable file
-    return StreamingResponse(
-        excel_buffer,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f"attachment; filename=resumen_{date.today().isoformat()}.xlsx"}
-    )
+# Temporalmente deshabilitado - requiere reportlab
+# @router.get("/export/summary-excel")
+# def export_summary_excel(
+#     db: Session = Depends(get_db),
+#     current_user = Depends(require_role(["admin", "supervisor", "vendedor"]))
+# ):
+#     """Export summary report to Excel"""
+#     # Get all data
+#     stats = StatsService.get_daily_sales(db)
+#     low_stock = StatsService.get_low_stock_products(db)
+#     pending_summary = StatsService.get_pending_orders_summary(db)
+#     
+#     # Generate Excel
+#     excel_buffer = ExportService.generate_summary_excel(stats, low_stock, pending_summary)
+#     
+#     # Return as downloadable file
+#     return StreamingResponse(
+#         excel_buffer,
+#         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+#         headers={"Content-Disposition": f"attachment; filename=resumen_{date.today().isoformat()}.xlsx"}
+#     )

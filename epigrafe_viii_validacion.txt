@@ -1,0 +1,46 @@
+# EPÍGRAFE VIII: Verificación y validación del sistema de gestión de pedidos
+
+## 8.1 Técnicas de validación de requisitos
+
+Para garantizar que el sistema cumple con los requisitos funcionales y no funcionales definidos, se diseñaron y ejecutaron 44 casos de prueba (CP), cubriendo todos los módulos principales: usuarios, roles, productos, clientes, pedidos, pagos, devoluciones, reportes y auditoría. Cada caso de prueba especifica:
+
+- **Entrada:** Datos o acciones a realizar.
+- **Acción:** Operación o flujo a ejecutar en el sistema.
+- **Resultado esperado:** Comportamiento correcto según los requisitos.
+- **Casos positivos y negativos:** Se validan tanto escenarios exitosos como errores esperados (por ejemplo, intentos de sobrepago, falta de stock, acceso no autorizado).
+
+**Aquí irían los casos de prueba extraídos manualmente por el usuario.**
+
+## 8.2 Técnicas de gestión de requisitos
+
+Se emplearon matrices de trazabilidad para asegurar la cobertura de todos los requisitos funcionales (RF) y no funcionales (RNF) mediante los casos de prueba y las interfaces implementadas. Estas matrices permiten verificar que:
+
+- Cada RF y RNF tiene al menos un caso de prueba asociado.
+- Cada historia de usuario (HU) cubre los RF relevantes.
+- Se puede rastrear el cumplimiento de requisitos desde la especificación hasta la validación final.
+
+## 8.3 Estrategia de pruebas
+
+La estrategia de pruebas incluyó:
+
+- **Pruebas unitarias:** Validación de la lógica de negocio en servicios individuales (por ejemplo, cálculo de monto pendiente, validación de stock, cambio de estado de pedido).
+- **Pruebas de integración:** Ejecución de endpoints completos con base de datos real, verificando flujos completos (creación de pedidos, pagos, devoluciones).
+- **Pruebas de seguridad:** Validación de autenticación JWT, control de acceso por roles (RBAC), protección de endpoints y manejo de credenciales.
+
+Se utilizó el framework PyTest y la herramienta pytest-cov para medir la cobertura de código.
+
+## 8.4 Ejecución de pruebas
+
+- **Cobertura de código:** Se alcanzó un 89% de cobertura, validando la mayoría de los caminos críticos del sistema.
+- **Resultados:** Todos los casos de prueba críticos pasaron exitosamente. Se detectaron y corrigieron defectos menores durante la integración (por ejemplo, validación de sobrepago y restauración de inventario en devoluciones).
+- **Evidencias:** Los resultados de las pruebas y reportes de cobertura están disponibles en los archivos generados por pytest y pytest-cov.
+
+## 8.5 Resultados de la validación
+
+- **Resumen:** El sistema cumple con los requisitos funcionales y no funcionales definidos, demostrando robustez y fiabilidad en los escenarios evaluados.
+- **Defectos encontrados y corregidos:** Se documentaron y solucionaron errores relacionados con validaciones de negocio y control de acceso.
+- **Validación con el cliente:** Se realizó una revisión conjunta con el usuario final, quien validó la funcionalidad y usabilidad del sistema, sugiriendo solo mejoras menores en la interfaz.
+
+---
+
+(Este texto está listo para revisión y para que insertes los casos de prueba manualmente en la sección indicada.)

@@ -6,6 +6,7 @@ from src.core.database import get_db
 from src.core.deps import require_role
 from src.modules.products.schema import ProductCreate, ProductUpdate, ProductResponse
 from src.modules.products.service import ProductService
+from src.modules.orders.stats_service import StatsService
 
 router = APIRouter(prefix="/api/products", tags=["products"])
 
@@ -75,3 +76,12 @@ def delete_product(
 ):
     """Delete product - Admin only"""
     return ProductService.delete_product(db, product_id)
+
+
+@router.get("/alerts/low-stock", response_model=List[dict])
+def get_low_stock_alerts(
+    db: Session = Depends(get_db),
+    current_user = Depends(require_role(["admin", "supervisor"]))
+):
+    """Get products with low stock - Admin and Supervisor only"""
+    return StatsService.get_low_stock_products(db)

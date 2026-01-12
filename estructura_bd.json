@@ -1,0 +1,811 @@
+{
+  "alembic_version": {
+    "columnas": [
+      {
+        "nombre": "version_num",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "version_num"
+    ],
+    "foreign_keys": []
+  },
+  "clientes": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('clientes_id_seq'::regclass)"
+      },
+      {
+        "nombre": "nombre",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "calle",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "municipio",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "provincia",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "localidad",
+        "tipo": "character varying",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "es_mipyme",
+        "tipo": "boolean",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "cuenta_de_pago",
+        "tipo": "character varying",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "updated_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": []
+  },
+  "compras": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('compras_id_seq'::regclass)"
+      },
+      {
+        "nombre": "proveedor_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "fecha_compra",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "total",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "notas",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "proveedor_id",
+        "tabla_referenciada": "proveedores",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "contactos_clientes": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('contactos_clientes_id_seq'::regclass)"
+      },
+      {
+        "nombre": "cliente_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "tipo",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "valor",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "cliente_id",
+        "tabla_referenciada": "clientes",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "detalles_compra": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('detalles_compra_id_seq'::regclass)"
+      },
+      {
+        "nombre": "compra_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "producto_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "cantidad",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "precio_compra",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "subtotal",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "compra_id",
+        "tabla_referenciada": "compras",
+        "columna_referenciada": "id"
+      },
+      {
+        "columna": "producto_id",
+        "tabla_referenciada": "productos",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "detalles_pedido": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('detalles_pedido_id_seq'::regclass)"
+      },
+      {
+        "nombre": "pedido_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "producto_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "cantidad",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "precio_unitario",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "subtotal",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "pedido_id",
+        "tabla_referenciada": "pedidos",
+        "columna_referenciada": "id"
+      },
+      {
+        "columna": "producto_id",
+        "tabla_referenciada": "productos",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "devoluciones": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('devoluciones_id_seq'::regclass)"
+      },
+      {
+        "nombre": "pedido_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "usuario_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "motivo",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "descripcion",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "fecha_devolucion",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "nombre": "productos_devueltos",
+        "tipo": "jsonb",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "monto_total",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "nombre": "updated_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "pedido_id",
+        "tabla_referenciada": "pedidos",
+        "columna_referenciada": "id"
+      },
+      {
+        "columna": "usuario_id",
+        "tabla_referenciada": "usuarios",
+        "columna_referenciada": "id"
+      },
+      {
+        "columna": "pedido_id",
+        "tabla_referenciada": "pedidos",
+        "columna_referenciada": "id"
+      },
+      {
+        "columna": "usuario_id",
+        "tabla_referenciada": "usuarios",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "logs_acciones": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('logs_acciones_id_seq'::regclass)"
+      },
+      {
+        "nombre": "usuario_id",
+        "tipo": "integer",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "endpoint",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "metodo_http",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "payload",
+        "tipo": "json",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "ip_address",
+        "tipo": "character varying",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "user_agent",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "status_code",
+        "tipo": "integer",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "response_time_ms",
+        "tipo": "integer",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "usuario_id",
+        "tabla_referenciada": "usuarios",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "pagos": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('pagos_id_seq'::regclass)"
+      },
+      {
+        "nombre": "pedido_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "monto",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "cuenta_origen",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "fecha_pago",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "codigo_transfermovil",
+        "tipo": "character varying",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "pedido_id",
+        "tabla_referenciada": "pedidos",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "pedidos": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('pedidos_id_seq'::regclass)"
+      },
+      {
+        "nombre": "cliente_id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "fecha_pedido",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "estado",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "total",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "total_pagado",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "devolucion_sacar_negocio",
+        "tipo": "boolean",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "updated_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": [
+      {
+        "columna": "cliente_id",
+        "tabla_referenciada": "clientes",
+        "columna_referenciada": "id"
+      }
+    ]
+  },
+  "productos": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('productos_id_seq'::regclass)"
+      },
+      {
+        "nombre": "nombre",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "descripcion",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "precio_venta",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "stock",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "stock_minimo",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "updated_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": []
+  },
+  "productos_historicos": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('productos_historicos_id_seq'::regclass)"
+      },
+      {
+        "nombre": "producto_id_original",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "nombre",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "descripcion",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "precio_venta",
+        "tipo": "numeric",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "stock_al_eliminar",
+        "tipo": "integer",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "fecha_eliminacion",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "datos_adicionales",
+        "tipo": "json",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": []
+  },
+  "proveedores": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('proveedores_id_seq'::regclass)"
+      },
+      {
+        "nombre": "nombre",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "telefono",
+        "tipo": "character varying",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "email",
+        "tipo": "character varying",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "direccion",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "notas",
+        "tipo": "text",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "updated_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": []
+  },
+  "usuarios": {
+    "columnas": [
+      {
+        "nombre": "id",
+        "tipo": "integer",
+        "nullable": false,
+        "default": "nextval('usuarios_id_seq'::regclass)"
+      },
+      {
+        "nombre": "username",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "email",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "hashed_password",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "rol",
+        "tipo": "character varying",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "is_active",
+        "tipo": "boolean",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "created_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "nombre": "updated_at",
+        "tipo": "timestamp without time zone",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "primary_keys": [
+      "id"
+    ],
+    "foreign_keys": []
+  }
+}

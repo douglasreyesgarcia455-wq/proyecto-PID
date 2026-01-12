@@ -31,6 +31,17 @@ const ProductsPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+
+  // Edit product modal
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    nombre: '',
+    descripcion: '',
+    precio_venta: '',
+    stock: '',
+    stock_minimo: ''
+  });
+  const [updating, setUpdating] = useState(false);
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,6 +210,64 @@ const ProductsPage = () => {
     setProductToDelete(null);
   };
 
+  // Edit product handlers
+  const openEditModal = () => {
+    if (!selectedProduct) return;
+    
+    setEditFormData({
+      nombre: selectedProduct.nombre,
+      descripcion: selectedProduct.descripcion || '',
+      precio_venta: selectedProduct.precio_venta.toString(),
+      stock: selectedProduct.stock.toString(),
+      stock_minimo: selectedProduct.stock_minimo.toString()
+    });
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+    setUpdating(true);
+    setError('');
+    
+    const updateData = {
+      nombre: editFormData.nombre,
+      descripcion: editFormData.descripcion,
+      precio_venta: parseFloat(editFormData.precio_venta),
+      stock: parseInt(editFormData.stock),
+      stock_minimo: parseInt(editFormData.stock_minimo)
+    };
+    
+    const result = await productsService.update(selectedProduct.id, updateData);
+    
+    if (result.success) {
+      setSuccessMessage('Producto actualizado exitosamente');
+      setTimeout(() => setSuccessMessage(''), 3000);
+      await loadProducts();
+      
+      // Update selected product
+      const updated = products.find(p => p.id === selectedProduct.id);
+      setSelectedProduct(updated);
+      
+      closeEditModal();
+    } else {
+      setError(result.error);
+    }
+
+    setUpdating(false);
+  };
+
   // Pagination
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -345,67 +414,77 @@ const ProductsPage = () => {
 
             {selectedProduct ? (
               <div className="p-6">
-                {/* Product Info */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4">
-                    Información General
-                  </h3>
-                  <div className="space-y-3 text-sm">
-                    <div>
-                      <strong className="text-gray-600">ID:</strong>
-                      <span className="ml-2">{selectedProduct.id}</span>
-                    </div>
-                    <div>
-                      <strong className="text-gray-600">Nombre:</strong>
-                      <span className="ml-2">{selectedProduct.nombre}</span>
-                    </div>
-                    {selectedProduct.descripcion && (
+                {/* Product Info with Action Buttons */}
+                <div className="flex gap-4">
+                  {/* Left side - Product Data */}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4">
+                      Información General
+                    </h3>
+                    <div className="space-y-3 text-sm">
                       <div>
-                        <strong className="text-gray-600">Descripción:</strong>
-                        <p className="ml-2 text-gray-700">{selectedProduct.descripcion}</p>
+                        <strong className="text-gray-600">ID:</strong>
+                        <span className="ml-2">{selectedProduct.id}</span>
                       </div>
-                    )}
-                    <div>
-                      <strong className="text-gray-600">Precio de Venta:</strong>
-                      <span className="ml-2 text-green-600 font-bold">
-                        ${parseFloat(selectedProduct.precio_venta).toFixed(2)}
-                      </span>
-                    </div>
-                    <div>
-                      <strong className="text-gray-600">Stock Actual:</strong>
-                      <span className={`ml-2 font-bold ${selectedProduct.stock <= selectedProduct.stock_minimo ? 'text-red-600' : 'text-gray-900'}`}>
-                        {selectedProduct.stock} unidades
-                      </span>
-                    </div>
-                    <div>
-                      <strong className="text-gray-600">Stock Mínimo:</strong>
-                      <span className="ml-2">{selectedProduct.stock_minimo} unidades</span>
-                    </div>
-                    {selectedProduct.stock <= selectedProduct.stock_minimo && (
-                      <div className="p-3 bg-red-50 border border-red-200 rounded">
-                        <p className="text-sm text-red-800 font-semibold">
-                          ⚠️ Stock bajo nivel mínimo
-                        </p>
+                      <div>
+                        <strong className="text-gray-600">Nombre:</strong>
+                        <span className="ml-2">{selectedProduct.nombre}</span>
                       </div>
-                    )}
+                      {selectedProduct.descripcion && (
+                        <div>
+                          <strong className="text-gray-600">Descripción:</strong>
+                          <p className="ml-2 text-gray-700">{selectedProduct.descripcion}</p>
+                        </div>
+                      )}
+                      <div>
+                        <strong className="text-gray-600">Precio de Venta:</strong>
+                        <span className="ml-2 text-green-600 font-bold">
+                          ${parseFloat(selectedProduct.precio_venta).toFixed(2)}
+                        </span>
+                      </div>
+                      <div>
+                        <strong className="text-gray-600">Stock Actual:</strong>
+                        <span className={`ml-2 font-bold ${selectedProduct.stock <= selectedProduct.stock_minimo ? 'text-red-600' : 'text-gray-900'}`}>
+                          {selectedProduct.stock} unidades
+                        </span>
+                      </div>
+                      <div>
+                        <strong className="text-gray-600">Stock Mínimo:</strong>
+                        <span className="ml-2">{selectedProduct.stock_minimo} unidades</span>
+                      </div>
+                      {selectedProduct.stock <= selectedProduct.stock_minimo && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded">
+                          <p className="text-sm text-red-800 font-semibold">
+                            ⚠️ Stock bajo nivel mínimo
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                {/* Action Buttons */}
-                <div className="space-y-3 border-t pt-4">
-                  <button
-                    onClick={openReduceStockModal}
-                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded transition"
-                  >
-                    📉 Reducir Stock
-                  </button>
-                  
-                  <button
-                    onClick={() => handleDeleteClick(selectedProduct)}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
-                  >
-                    🗑️ Eliminar Producto
-                  </button>
+                  {/* Right side - Action Buttons */}
+                  <div className="flex flex-col gap-3 min-w-[160px]">
+                    <button
+                      onClick={openEditModal}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition text-sm"
+                    >
+                      ✏️ Editar
+                    </button>
+
+                    <button
+                      onClick={openReduceStockModal}
+                      className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded transition text-sm"
+                    >
+                      📉 Reducir Stock
+                    </button>
+                    
+                    <button
+                      onClick={() => handleDeleteClick(selectedProduct)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition text-sm"
+                    >
+                      🗑️ Eliminar
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -522,6 +601,114 @@ const ProductsPage = () => {
                     className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition disabled:opacity-50"
                   >
                     {saving ? 'Guardando...' : 'Guardar Producto'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Product Modal */}
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="bg-blue-600 text-white px-6 py-4 rounded-t-lg">
+                <h3 className="text-xl font-bold">✏️ Editar Producto</h3>
+              </div>
+              
+              <form onSubmit={handleSubmitEdit} className="p-6">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nombre <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    value={editFormData.nombre}
+                    onChange={handleEditInputChange}
+                    required
+                    maxLength={200}
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Descripción
+                  </label>
+                  <textarea
+                    name="descripcion"
+                    value={editFormData.descripcion}
+                    onChange={handleEditInputChange}
+                    rows={3}
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Precio de Venta <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="precio_venta"
+                    value={editFormData.precio_venta}
+                    onChange={handleEditInputChange}
+                    required
+                    min="0.01"
+                    step="0.01"
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-yellow-600 mt-1">
+                    ⚠️ Cambiar el precio NO afectará pedidos anteriores
+                  </p>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Stock <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="stock"
+                    value={editFormData.stock}
+                    onChange={handleEditInputChange}
+                    required
+                    min="0"
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Stock Mínimo <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="stock_minimo"
+                    value={editFormData.stock_minimo}
+                    onChange={handleEditInputChange}
+                    required
+                    min="0"
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={closeEditModal}
+                    disabled={updating}
+                    className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition disabled:opacity-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={updating}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition disabled:opacity-50"
+                  >
+                    {updating ? 'Actualizando...' : 'Actualizar Producto'}
                   </button>
                 </div>
               </form>

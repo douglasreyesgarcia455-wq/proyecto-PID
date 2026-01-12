@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
-import { ordersService, paymentsService } from '../services/api';
+import { ordersService, paymentsService, devolucionesService } from '../services/api';
 
 const OrdersPage = () => {
   const navigate = useNavigate();
@@ -20,9 +20,23 @@ const OrdersPage = () => {
   });
   const [processingPayment, setProcessingPayment] = useState(false);
   
+  // Devolución modal
+  const [showDevolucionModal, setShowDevolucionModal] = useState(false);
+  const [showDevolucionDetallesModal, setShowDevolucionDetallesModal] = useState(false);
+  const [devolucionData, setDevolucionData] = useState({
+    motivo: '',
+    descripcion: ''
+  });
+  const [devolucionDetalles, setDevolucionDetalles] = useState(null);
+  const [processingDevolucion, setProcessingDevolucion] = useState(false);
+  
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  // Search filters
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterEstado, setFilterEstado] = useState('todos');
 
   useEffect(() => {
     loadOrders();
@@ -113,6 +127,70 @@ const OrdersPage = () => {
     setProcessingPayment(false);
   };
 
+  // Devolución handlers
+  const openDevolucionModal = () => {
+    if (!selectedOrder) return;
+    setDevolucionData({ motivo: '', descripcion: '' });
+    setShowDevolucionModal(true);
+  };
+
+  const closeDevolucionModal = () => {
+    setShowDevolucionModal(false);
+    setDevolucionData({ motivo: '', descripcion: '' });
+  };
+
+  const handleDevolucionSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!devolucionData.motivo.trim()) {
+      setError('El motivo es obligatorio');
+      return;
+    }
+
+    setProcessingDevolucion(true);
+    setError('');
+
+    const result = await devolucionesService.crear({
+      pedido_id: selectedOrder.id,
+      motivo: devolucionData.motivo,
+      descripcion: devolucionData.descripcion
+    });
+
+    if (result.success) {
+      setSuccessMessage('Devolución procesada exitosamente. Se ha restaurado el inventario.');
+      setTimeout(() => setSuccessMessage(''), 4000);
+      await loadOrders();
+      
+      // Update selected order
+      const updatedOrder = orders.find(o => o.id === selectedOrder.id);
+      setSelectedOrder(updatedOrder);
+      
+      closeDevolucionModal();
+    } else {
+      setError(result.error);
+    }
+
+    setProcessingDevolucion(false);
+  };
+
+  const handleMostrarDetallesDevolucion = async () => {
+    if (!selectedOrder) return;
+
+    const result = await devolucionesService.obtenerPorPedido(selectedOrder.id);
+    
+    if (result.success) {
+      setDevolucionDetalles(result.data);
+      setShowDevolucionDetallesModal(true);
+    } else {
+      setError(result.error);
+    }
+  };
+
+  const closeDevolucionDetallesModal = () => {
+    setShowDevolucionDetallesModal(false);
+    setDevolucionDetalles(null);
+  };
+
   // Pagination
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -127,6 +205,26 @@ const OrdersPage = () => {
       setSelectedOrder(null);
     }
   };
+
+  // Filter orders based on search term and estado
+  const filteredOrders = orders.filter(order => {
+    // Filter by estado
+    if (filterEstado === 'pendiente' && order.estado !== 'pendiente') {
+      return false;
+    }
+    if (filterEstado === 'pagado' && order.estado !== 'pagado') {
+      return false;
+    }
+    
+    // Filter by search term
+    if (!searchTerm) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      order.id?.toString().includes(search) ||
+      order.cliente_nombre?.toLowerCase().includes(search) ||
+      order.total?.toString().includes(search)
+    );
+  });
 
   return (
     <Layout>
@@ -159,19 +257,63 @@ const OrdersPage = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Orders Table */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-purple-600 text-white px-6 py-4">
-              <h2 className="text-xl font-bold">Lista de Pedidos</h2>
+          <div className="space-y-4">
+            {/* Filters */}
+            <div className="bg-white rounded-lg shadow-md p-4 space-y-3">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="🔍 Buscar por ID, cliente o total..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+                <svg
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Estado:</label>
+                <select
+                  value={filterEstado}
+                  onChange={(e) => setFilterEstado(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="todos">📋 Todos</option>
+                  <option value="pendiente">⏳ Pendientes</option>
+                  <option value="pagado">✅ Pagados</option>
+                </select>
+              </div>
+              
+              {(searchTerm || filterEstado !== 'todos') && (
+                <p className="text-sm text-gray-600">
+                  {filteredOrders.length} pedido{filteredOrders.length !== 1 ? 's' : ''} encontrado{filteredOrders.length !== 1 ? 's' : ''}
+                </p>
+              )}
             </div>
+
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-purple-600 text-white px-6 py-4">
+                <h2 className="text-xl font-bold">Lista de Pedidos</h2>
+              </div>
 
             <div className="overflow-x-auto">
               {loading ? (
                 <div className="p-8 text-center text-gray-500">
                   Cargando pedidos...
                 </div>
-              ) : orders.length === 0 ? (
+              ) : filteredOrders.length === 0 ? (
                 <div className="p-8 text-center text-gray-500">
-                  No se encontraron pedidos
+                  {(searchTerm || filterEstado !== 'todos') ? '🔍 No se encontraron pedidos que coincidan con los filtros' : 'No se encontraron pedidos'}
                 </div>
               ) : (
                 <table className="w-full">
@@ -192,7 +334,7 @@ const OrdersPage = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {orders.map((order) => (
+                    {filteredOrders.map((order) => (
                       <tr
                         key={order.id}
                         onClick={() => handleSelectOrder(order)}
@@ -216,6 +358,8 @@ const OrdersPage = () => {
                             className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               order.estado === 'pagado'
                                 ? 'bg-green-100 text-green-800'
+                                : order.estado === 'devuelto'
+                                ? 'bg-red-100 text-red-800'
                                 : 'bg-yellow-100 text-yellow-800'
                             }`}
                           >
@@ -248,6 +392,7 @@ const OrdersPage = () => {
               >
                 Siguiente →
               </button>
+            </div>
             </div>
           </div>
 
@@ -285,6 +430,8 @@ const OrdersPage = () => {
                         className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           selectedOrder.estado === 'pagado'
                             ? 'bg-green-100 text-green-800'
+                            : selectedOrder.estado === 'devuelto'
+                            ? 'bg-red-100 text-red-800'
                             : 'bg-yellow-100 text-yellow-800'
                         }`}
                       >
@@ -348,17 +495,33 @@ const OrdersPage = () => {
                   </div>
                 )}
 
-                {/* Pay Button */}
-                {selectedOrder.estado === 'pendiente' && (
-                  <div className="pt-4 border-t">
+                {/* Action Buttons */}
+                <div className="pt-4 border-t space-y-3">
+                  {selectedOrder.estado === 'pendiente' && (
                     <button
                       onClick={openPaymentModal}
                       className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded transition font-semibold"
                     >
                       💳 Registrar Pago
                     </button>
-                  </div>
-                )}
+                  )}
+                  
+                  {selectedOrder.estado === 'devuelto' ? (
+                    <button
+                      onClick={handleMostrarDetallesDevolucion}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded transition font-semibold"
+                    >
+                      📋 Mostrar Detalles de Devolución
+                    </button>
+                  ) : (
+                    <button
+                      onClick={openDevolucionModal}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded transition font-semibold"
+                    >
+                      ↩️ Realizar Devolución
+                    </button>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="p-8 text-center text-gray-500">
@@ -460,6 +623,187 @@ const OrdersPage = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Devolución Modal */}
+        {showDevolucionModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="bg-red-600 text-white px-6 py-4 rounded-t-lg">
+                <h3 className="text-xl font-bold">↩️ Realizar Devolución</h3>
+              </div>
+              
+              <form onSubmit={handleDevolucionSubmit} className="p-6">
+                <div className="mb-4 p-4 bg-yellow-50 border border-yellow-300 rounded">
+                  <p className="text-sm text-gray-700 mb-2">
+                    <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer.
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <strong>Pedido:</strong> #{selectedOrder.id}
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <strong>Total:</strong> ${parseFloat(selectedOrder.total).toFixed(2)}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Motivo <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={devolucionData.motivo}
+                      onChange={(e) => setDevolucionData({...devolucionData, motivo: e.target.value})}
+                      className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      placeholder="Ej: Producto defectuoso, error en pedido..."
+                      maxLength={500}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Descripción Detallada
+                    </label>
+                    <textarea
+                      value={devolucionData.descripcion}
+                      onChange={(e) => setDevolucionData({...devolucionData, descripcion: e.target.value})}
+                      className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      placeholder="Detalles adicionales sobre la devolución..."
+                      rows={4}
+                    />
+                  </div>
+
+                  <div className="p-3 bg-blue-50 rounded text-sm text-gray-700">
+                    <p className="font-semibold mb-1">Al procesar la devolución:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Se restaurará el inventario</li>
+                      <li>Se eliminarán los pagos asociados</li>
+                      <li>El pedido cambiará a estado "DEVUELTO"</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={closeDevolucionModal}
+                    disabled={processingDevolucion}
+                    className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded transition disabled:opacity-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={processingDevolucion}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition disabled:opacity-50 font-semibold"
+                  >
+                    {processingDevolucion ? 'Procesando...' : 'Confirmar Devolución'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Detalles de Devolución Modal */}
+        {showDevolucionDetallesModal && devolucionDetalles && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="bg-blue-600 text-white px-6 py-4 rounded-t-lg sticky top-0">
+                <h3 className="text-xl font-bold">📋 Detalles de la Devolución</h3>
+              </div>
+              
+              <div className="p-6">
+                {/* Información General */}
+                <div className="mb-6">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Información General</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600">ID Devolución:</p>
+                      <p className="font-semibold">#{devolucionDetalles.id}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Pedido:</p>
+                      <p className="font-semibold">#{devolucionDetalles.pedido_id}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Fecha de Devolución:</p>
+                      <p className="font-semibold">
+                        {new Date(devolucionDetalles.fecha_devolucion).toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Monto Devuelto:</p>
+                      <p className="font-semibold text-red-600 text-lg">
+                        ${parseFloat(devolucionDetalles.monto_total).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Motivo y Descripción */}
+                <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded">
+                  <h4 className="text-md font-bold text-gray-800 mb-2">Motivo:</h4>
+                  <p className="text-gray-700 mb-3">{devolucionDetalles.motivo}</p>
+                  
+                  {devolucionDetalles.descripcion && (
+                    <>
+                      <h4 className="text-md font-bold text-gray-800 mb-2">Descripción:</h4>
+                      <p className="text-gray-700">{devolucionDetalles.descripcion}</p>
+                    </>
+                  )}
+                </div>
+
+                {/* Productos Devueltos */}
+                <div className="mb-6">
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Productos Devueltos</h4>
+                  <table className="w-full border text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left border">Producto</th>
+                        <th className="px-3 py-2 text-center border">Cantidad</th>
+                        <th className="px-3 py-2 text-right border">Precio Unit.</th>
+                        <th className="px-3 py-2 text-right border">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {devolucionDetalles.productos_devueltos.map((producto, index) => (
+                        <tr key={index}>
+                          <td className="px-3 py-2 border">{producto.nombre}</td>
+                          <td className="px-3 py-2 text-center border">{producto.cantidad}</td>
+                          <td className="px-3 py-2 text-right border">
+                            ${parseFloat(producto.precio).toFixed(2)}
+                          </td>
+                          <td className="px-3 py-2 text-right border font-bold">
+                            ${(producto.cantidad * parseFloat(producto.precio)).toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot className="bg-gray-50 font-bold">
+                      <tr>
+                        <td colSpan={3} className="px-3 py-2 text-right border">Total:</td>
+                        <td className="px-3 py-2 text-right border text-red-600">
+                          ${parseFloat(devolucionDetalles.monto_total).toFixed(2)}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={closeDevolucionDetallesModal}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition font-semibold"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

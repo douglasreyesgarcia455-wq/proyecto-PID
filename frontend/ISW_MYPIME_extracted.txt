@@ -1,0 +1,1854 @@
+UNIVERSIDAD DE LAS CIENCIAS INFORMÁTICAS
+
+FACULTAD DE TECNOLOGÍAS INTERACTIVAS
+
+Trabajo de Curso de Ingeniería de Software I
+
+Título: Sistema de Gestión de pedidos de una MYPIME comercializadora de Ácido acético y botellas plásticas
+
+Autores:
+
+Douglas Reyes García
+
+Alex Daniel Jorro Gacita
+
+Tutor: Lisset Salazar Gómez
+
+La Habana, Noviembre 2025
+
+“Año 67 de la Revolución”
+
+Resumen
+
+El presente trabajo aborda la propuesta de un Sistema de Gestión de Pedidos para una MIPYME comercializadora de ácido acético y botellas plásticas, orientado a optimizar el control de sus operaciones comerciales mediante la automatización de los procesos de pedidos, pagos, entregas y devoluciones. Actualmente, la empresa enfrenta dificultades derivadas del manejo manual de la información, lo que genera demoras, errores y falta de trazabilidad en la gestión administrativa y operativa.
+
+El objetivo general del trabajo consiste en analizar la factibilidad y diseñar la base conceptual de una solución que centralice la información del negocio, permitiendo gestionar clientes, productos y transacciones de forma eficiente, confiable y accesible. La propuesta busca garantizar la integridad de los datos, reducir la carga operativa del personal y facilitar la toma de decisiones mediante reportes automatizados.
+
+Para el desarrollo conceptual del sistema se adopta un enfoque ágil, basado en la metodología Extreme Programming (XP), por su adecuación a equipos pequeños, requisitos parcialmente cambiantes y necesidad de entregas funcionales continuas. Este enfoque favorece la retroalimentación constante del cliente y la mejora progresiva del producto.
+
+El trabajo se centra en el estudio lógico del problema, la identificación de los procesos de negocio y la fundamentación teórica necesaria para etapas posteriores de diseño e implementación del sistema, contribuyendo así al fortalecimiento de la gestión comercial en pequeñas empresas del sector químico.
+
+Palabras clave: MIPYME; Gestión de Pedidos; Ingeniería de Software; Automatización Comercial; XP.
+
+Introducción
+
+La gestión de pedidos constituye una de las actividades más relevantes en las micro, pequeñas y medianas empresas (MIPYMES) dedicadas a la comercialización de productos químicos, donde la eficiencia operativa, la exactitud en el registro de las transacciones y la trazabilidad del proceso resultan esenciales para garantizar la satisfacción del cliente y la rentabilidad del negocio. En la comercializadora de ácido acético objeto de estudio, este proceso se realiza actualmente mediante procedimientos manuales que involucran el uso de hojas de cálculo y comunicación informal entre clientes, vendedores y personal administrativo.
+
+Dichas prácticas generan demoras en el procesamiento de los pedidos, errores en la consolidación de la información, dificultades en el control del inventario y poca transparencia en el seguimiento de las ventas.
+
+Este escenario limita la capacidad de respuesta de la empresa, afecta la confiabilidad de los registros y obstaculiza la toma de decisiones basada en datos actualizados. La falta de trazabilidad y de una gestión centralizada también dificulta el control de las devoluciones y pagos, elementos fundamentales para mantener la integridad operativa del negocio.
+
+A partir de esta situación, se plantea el siguiente problema: ¿Cómo automatizar la gestión de pedidos de una MIPYME comercializadora de ácido acético, mejorando la eficiencia, trazabilidad y calidad del servicio?
+
+El objetivo general de esta investigación es diseñar e implementar un sistema web de gestión de pedidos para la comercializadora de ácido acético y botellas plásticas, que permita automatizar los procesos de solicitud, validación, registro y seguimiento de pedidos, garantizando la coherencia de la información y la mejora del desempeño organizacional. Para cumplir con este propósito, se definieron las siguientes tareas: analizar el proceso actual de gestión de pedidos en la empresa, identificar los requerimientos funcionales y no funcionales del sistema, modelar los procesos de negocio, diseñar la arquitectura del software y la base de datos, implementar los módulos de la aplicación mediante un enfoque iterativo e incremental y validar el sistema a través de pruebas técnicas y de usabilidad.
+
+Metodológicamente, la investigación combina métodos teóricos, empíricos y técnicos. Entre los métodos teóricos se emplearon el analítico-sintético y el inductivo-deductivo, utilizados para el estudio del estado del arte y la definición de los requerimientos. Los métodos empíricos incluyeron la observación directa del proceso comercial, entrevistas con los empleados y revisión documental de los registros de pedidos existentes. Además, se aplicaron herramientas propias de la Ingeniería de Software, como el modelado UML para la representación estructural y comportamental del sistema, el uso de herramientas CASE (Lucidchart y Miro) para la elaboración de diagramas, y la utilización de tecnologías web modernas —Python con Django para el backend, HTML, CSS y JavaScript para la interfaz de usuario y PostgreSQL como gestor de base de datos—, las cuales garantizan la integridad, escalabilidad y mantenibilidad del sistema desarrollado.
+
+Capítulo I. Fundamentación teórica
+
+Introducción
+
+Este capítulo establece los fundamentos teóricos y tecnológicos necesarios para dar solución a la problemática. Se analizan los principales conceptos relacionados con la gestión empresarial y el control de información, se revisan soluciones análogas disponibles en el mercado y se justifican las decisiones metodológicas y tecnológicas aplicadas en el diseño de la solución propuesta.
+La investigación se apoya en una revisión documental y en el análisis comparativo de herramientas CRM existentes, con el propósito de sentar las bases conceptuales y prácticas necesarias para el desarrollo de un sistema que optimice la administración de pedidos, pagos, clientes y productos dentro de un entorno empresarial en crecimiento.
+
+1.1 Conceptos asociados al tema
+
+1.1.1 Gestión comercial en las MIPYMES
+
+La gestión comercial es el conjunto de procesos administrativos, operativos y estratégicos orientados a planificar, ejecutar y controlar actividades de venta, distribución y atención al cliente, utilizando herramientas que centralicen información de clientes, productos, pedidos y pagos para mejorar la toma de decisiones, la eficiencia operativa y la competitividad (Ramírez, 2021).
+
+1.1.2 Automatización de procesos empresariales
+
+La automatización de procesos empresariales consiste en la capacidad de los sistemas informáticos para ejecutar tareas rutinarias sin intervención manual directa, garantizando rapidez, precisión y trazabilidad; en las MIPYMES permite reducir errores, optimizar tiempos de gestión, mantener actualizados los registros de pedidos, pagos e inventarios y destinar más tiempo a actividades estratégicas (González & Pérez, 2022).
+
+1.1.3 Gestión de relaciones con el cliente (CRM)
+
+La gestión de relaciones con el cliente (CRM) es un modelo apoyado en tecnologías de la información que facilita organizar, analizar y mejorar las interacciones con los clientes mediante la integración de contactos, historial de compras, comunicaciones y transacciones, permitiendo estrategias de fidelización, personalización del servicio y una visión integral del desempeño comercial en las MIPYMES (López, 2020).
+
+1.1.4 Integración de gestión comercial, automatización y CRM
+
+La integración de estos elementos constituye una base esencial para el desarrollo competitivo y sostenible de las MIPYMES, ya que contribuye a modernizar las operaciones, aumentar la eficiencia y fortalecer la satisfacción del cliente (Ramírez, 2021; González & Pérez, 2022; López, 2020).
+
+1.2 Análisis de mercado
+
+El estudio de soluciones existentes revela diversas plataformas CRM orientadas a la gestión de clientes y procesos comerciales en pequeñas y medianas empresas. La Tabla 1.1 presenta el análisis comparativo de sistemas relevantes que sirven como referencia para el desarrollo de la solución propuesta.
+
+Tabla 1.1: Análisis comparativo de plataformas de gestión comercial
+
+El análisis identifica como puntos coincidentes la centralización de la información de clientes y la automatización de procesos de venta. Sin embargo, se evidencia una brecha en soluciones personalizadas para MIPYMES locales que combinen la gestión simplificada de pedidos, pagos, productos y devoluciones, en un entorno accesible, ligero y adaptado a los recursos tecnológicos limitados de este tipo de negocios.
+
+1.3 Fundamentación del proceso de software a desarrollar
+
+El contexto empresarial en el que opera una MIPYME exige un manejo confiable y oportuno de la información, ya que las actividades comerciales dependen de la disponibilidad inmediata de datos precisos para la gestión de pedidos, pagos y control de inventarios. Este entorno requiere procesos organizativos capaces de asegurar integridad y coherencia en los registros, así como trazabilidad en cada operación realizada. Además, la dinámica del negocio demanda la capacidad de adaptarse rápidamente a cambios en las políticas comerciales, volúmenes de trabajo o necesidades específicas de los clientes, garantizando siempre continuidad operativa y una respuesta eficiente en cada interacción.
+
+1.3.1 Enfoque de ingeniería de software
+
+La aplicación del método de la estrella de Boehm y Turner permite determinar la idoneidad de un enfoque ágil basado en las características del proyecto.
+La evaluación posiciona este desarrollo cerca del centro del modelo, debido a los siguientes factores: un equipo reducido de desarrolladores (2 integrantes), requisitos parcialmente estables, criticidad moderada y necesidad de entregas tempranas y funcionales.
+Esta combinación favorece un proceso iterativo e incremental, centrado en la comunicación constante con el cliente y la mejora continua del producto.
+
+El proyecto presenta las características siguientes:
+
+Enfoque: Ágil
+
+Modelo: Incremental
+
+Metodología: Extreme Programming (XP)
+
+Criticidad — Baja (riesgo bajo)
+El proyecto no representa un riesgo significativo para las operaciones del cliente ni para la continuidad del servicio que ofrece. Un posible fallo del sistema no generaría pérdidas graves ni comprometería la reputación del negocio. Esta condición permite manejar el desarrollo con una planificación flexible, priorizando la eficiencia en el uso de recursos sin comprometer la estabilidad operativa.
+
+Dinamismo — Medio (requisitos con cambios moderados)
+El contexto comercial del cliente puede variar ocasionalmente, generando ajustes en los requerimientos del sistema. Estos cambios no son constantes ni impredecibles, pero deben considerarse dentro de la gestión del proyecto. A nivel de negocio, esto significa que el equipo debe mantener capacidad de respuesta ante modificaciones razonables, equilibrando la estabilidad del proyecto con la necesidad de adaptarse a nuevas demandas.
+
+Cultura — Baja o nula (equipo con poca colaboración interna)
+El equipo de desarrollo no posee una cultura consolidada de trabajo colaborativo. La comunicación interna es limitada y las decisiones tienden a tomarse de forma individual. A nivel de negocio, esto puede impactar la coordinación, el seguimiento de tareas y la velocidad de respuesta ante imprevistos. Es necesario reforzar la organización interna y establecer mecanismos claros de comunicación para mejorar la eficiencia global del proyecto.
+
+Tamaño del equipo — Pequeño (2 personas)
+El equipo está compuesto por dos integrantes, lo que permite un control directo de las actividades y una comunicación sencilla. Sin embargo, este tamaño también implica una menor capacidad para distribuir las cargas de trabajo o cubrir ausencias. Desde la perspectiva del negocio, se requiere una planificación precisa y una clara asignación de responsabilidades para evitar retrasos y mantener la continuidad del proyecto.
+
+Personal — Dos desarrolladores junior (experiencia baja)
+El equipo está integrado por personal en formación, con poca experiencia práctica en proyectos reales. Esto representa un factor relevante en la gestión del negocio, ya que puede influir en los tiempos de entrega y en la calidad de los resultados. Es necesario prever instancias de revisión, apoyo y orientación para asegurar que el trabajo cumpla los objetivos planteados y mantenga un estándar de calidad adecuado.
+
+1.3.2 Modelo de proceso de software
+
+Se adopta un modelo de proceso incremental, implementado mediante la metodología Extreme Programming (XP). En este enfoque, el desarrollo se organiza en iteraciones cortas (de una a dos semanas) que permiten construir y agregar al sistema nuevos incrementos funcionales. Cada incremento representa una parte operativa del producto, completamente integrada y validada.
+
+Esta estrategia combina la planificación continua con la entrega temprana de valor, lo que facilita validar las funcionalidades implementadas con el cliente y adaptarse con agilidad a posibles cambios en los requisitos.
+
+XP proporciona las prácticas técnicas que sustentan este modelo incremental: planificación basada en historias de usuario, programación en parejas, desarrollo guiado por pruebas (TDD), integración continua y refactorización constante. Estas prácticas garantizan que cada incremento mantenga un nivel adecuado de calidad y que el sistema evolucione de forma controlada, verificable y alineada con los objetivos del proyecto.
+
+1.3.3 Método de ingeniería de software
+
+Se selecciona Extreme Programming (XP) como modelo principal del proceso de desarrollo, dada su orientación hacia equipos pequeños, entregas frecuentes y adaptación rápida a los cambios.
+La metodología XP integra valores fundamentales como la comunicación, simplicidad, retroalimentación y adaptabilidad del equipo, los cuales se ajustan al entorno dinámico de una MIPYME que requiere optimizar procesos comerciales sin grandes estructuras tecnológicas.
+
+Las prácticas principales aplicadas fueron:
+
+Desarrollo iterativo con ciclos cortos de liberación (1 a 2 semanas).
+
+Retroalimentación continua del cliente para validar funcionalidades de pedidos, pagos y clientes.
+
+Programación en parejas para mejorar la calidad del código y reducir errores.
+
+Integración continua, garantizando el funcionamiento correcto del sistema tras cada iteración.
+
+Refactorización constante, mejorando la estructura interna sin alterar la funcionalidad.
+
+Pruebas automatizadas para asegurar la fiabilidad de las operaciones críticas.
+
+El marco metodológico de XP se complementó con herramientas y prácticas específicas de ingeniería para mantener la calidad del producto y la trazabilidad de los procesos:
+
+Planificación de iteraciones con historias de usuario priorizadas según el valor de negocio.
+
+Diseño orientado a componentes, diferenciando claramente los módulos de clientes, pedidos, productos y pagos.
+
+Desarrollo incremental, liberando funcionalidades operativas al cierre de cada iteración.
+
+Revisiones técnicas continuas y pruebas unitarias en cada módulo.
+
+Integración y despliegue continuo mediante un entorno de control de versiones.
+
+Los artefactos principales generados durante el proceso incluyen:
+Historias de usuario, versión funcional del sistema en cada iteración, documentación técnica y registros de pruebas.
+
+1.4 Herramientas y tecnologías
+
+1.4.1 Herramienta CASE
+
+Visual Paradigm 8.0 se empleó para el modelado de diagramas UML y la representación de la arquitectura del sistema. Estas herramientas permiten la colaboración en tiempo real, la documentación visual del flujo de procesos y la integración directa con entornos de desarrollo, lo que facilitó la comunicación y coordinación dentro del equipo de trabajo.
+
+1.4.2 Lenguaje de modelado
+
+Se utilizó UML (Unified Modeling Language) en su versión 2.0 como estándar para la representación gráfica de sistemas de software. Esta herramienta permitió describir de forma estructurada los casos de uso, clases, secuencias y componentes, facilitando la comprensión del sistema tanto a nivel funcional como técnico.
+
+1.4.3 Marco de trabajo para el desarrollo
+
+El desarrollo de la aplicación se realizó utilizando el framework Django para el backend, complementado con HTML5, CSS3 y JavaScript para el frontend. Django fue seleccionado por su arquitectura MVC (Modelo–Vista–Controlador), su seguridad integrada y la rapidez de desarrollo que ofrece para proyectos de tamaño medio.
+En conjunto, estas tecnologías permitieron construir una plataforma web dinámica, segura y modular, adecuada para la gestión de pedidos, clientes, productos y pagos en la MIPYME.
+
+1.4.4 Entorno de desarrollo integrado
+
+Se empleó Visual Studio Code como entorno de desarrollo principal con extensiones específicas de compilación e interpretación, por su compatibilidad con Python y JavaScript, integración con Git y extensiones para depuración, control de versiones y pruebas. Este entorno favoreció la productividad del equipo y la trazabilidad de los avances en las iteraciones de XP.
+
+1.4.5 Lenguaje de programación
+
+El sistema fue implementado utilizando Python 3.12 como lenguaje principal, aprovechando su sintaxis legible, amplia comunidad y ecosistema de librerías orientadas al desarrollo web.
+En el lado del cliente, se utilizó JavaScript ES2023 para la creación de interfaces interactivas y la validación dinámica de formularios, garantizando una experiencia de usuario fluida y moderna.
+
+1.4.6 Gestor de base de datos
+
+Se seleccionó PostgreSQL 16 como sistema gestor de base de datos por su cumplimiento de las propiedades ACID, soporte para tipos de datos JSON, alto rendimiento y robustez en entornos transaccionales.
+El control y la administración del modelo de datos se realizaron mediante pgAdmin 4, que facilitó la creación, consulta y mantenimiento de las estructuras de datos que sustentan la aplicación.
+
+Conclusiones parciales
+
+El estudio del estado del arte permitió identificar los principios conceptuales y tecnológicos que sustentan el desarrollo de sistemas de gestión comercial orientados a MIPYMES. El análisis de mercado evidenció la carencia de soluciones personalizadas que integren la automatización de pedidos, pagos y clientes mediante una interfaz ligera y adaptable al contexto local. La aplicación del modelo de Boehm y Turner justificó la adopción de la metodología Extreme Programming (XP) como el enfoque más adecuado para un equipo pequeño y con criticidad moderada, posibilitando un desarrollo incremental, iterativo y flexible. Asimismo, la selección de herramientas y tecnologías conformó un entorno moderno, seguro y escalable, sustentado en Django, Python, PostgreSQL y JavaScript, garantizando la integridad de los datos, la mantenibilidad del sistema y su adaptabilidad futura. En conjunto, este capítulo establece los fundamentos técnicos y metodológicos que servirán de base para el diseño y la implementación del sistema, en coherencia con las mejores prácticas de la ingeniería de software aplicada a entornos empresariales.
+
+Capítulo II. Modelado del Contexto
+
+Introducción
+
+El presente capítulo tiene como objetivo analizar el modelo de negocio actual de la MIPYME y proponer una solución informática que optimice sus procesos de gestión comercial. A través de técnicas de modelado empresarial, se caracteriza el sistema existente, identificando sus reglas de operación, actores involucrados y flujos de trabajo.
+Posteriormente, se establece el modelo mejorado que sustenta el desarrollo del sistema de gestión, especificando los nuevos procesos, roles y reglas de negocio que permitirán superar las limitaciones actuales.
+La metodología de análisis se apoya en diagramas UML y especificaciones estructuradas, garantizando una transición coherente entre el contexto operativo de la empresa y la propuesta tecnológica desarrollada.
+
+2.1 Técnicas de recopilación de información
+
+Para la obtención de información se emplearon diversas técnicas cualitativas orientadas a comprender la dinámica del negocio y los procesos vinculados a la gestión comercial. En primer lugar, se desarrolló una sesión de lluvia de ideas entre los integrantes del equipo, con el propósito de identificar las principales dificultades en la administración de pedidos, pagos y clientes, así como las oportunidades de mejora en la organización de la información. Posteriormente, se realizaron entrevistas semiestructuradas que permitieron profundizar en el flujo actual de trabajo, detectar ineficiencias en la comunicación interna y conocer las percepciones de los participantes sobre el desempeño de las actividades comerciales. De forma complementaria, se aplicó la observación directa durante la ejecución de las tareas operativas, lo que permitió evidenciar la dependencia de procesos manuales y la falta de centralización en el manejo de datos. Finalmente, se efectuó un análisis documental de registros y documentos internos relacionados con pedidos, facturación y pagos, con el fin de evaluar la trazabilidad, consistencia y disponibilidad de la información existente. La aplicación de estas técnicas permitió obtener una comprensión integral del contexto operativo y definir las principales necesidades y oportunidades de mejora en la gestión comercial.
+
+2.2 Fuentes de obtención de requisitos
+
+En el proceso de obtención de requisitos, es fundamental identificar las diversas fuentes de información que permiten definir con precisión las necesidades del sistema. Entre estas fuentes se consideran las metas del negocio, los stakeholders o interesados, el conocimiento del dominio, el entorno operacional y el entorno organizacional, cada una aportando perspectivas complementarias. Las metas u objetivos del negocio permiten identificar los resultados específicos que el sistema debe apoyar o mejorar, como reducir el tiempo de atención al cliente, optimizar la gestión de inventario o incrementar la eficiencia de los procesos de pago; para obtener esta información se analizaron planes estratégicos, informes de gestión y objetivos de mejora definidos por la dirección, lo que facilitó priorizar los requisitos y asegurar que estuvieran alineados con las necesidades reales de la organización. Los stakeholders, por su parte, incluyen a todas las personas o grupos con interés, responsabilidad o influencia sobre el sistema, y sus necesidades, expectativas y restricciones constituyen una fuente directa de requisitos; en este caso, se emplearon entrevistas, encuestas y talleres con usuarios finales, clientes, patrocinadores y personal operativo, asegurando así que se capturaran tanto los requerimientos funcionales como los no funcionales. El conocimiento del dominio aporta información sobre los procesos, reglas de negocio y prácticas del sector, permitiendo comprender cómo debe comportarse el sistema y qué restricciones deben considerarse; este conocimiento se obtuvo mediante la revisión de manuales, normativas de la industria, documentación interna y reuniones con expertos del área, garantizando que los requisitos reflejaran las realidades del negocio. Además, el entorno operacional considera las condiciones físicas, técnicas y ambientales en las que funcionará el sistema, incluyendo factores como ubicación, conectividad, dispositivos y equipos de soporte; se recopiló mediante inspecciones de campo, análisis de infraestructura tecnológica y reuniones con el personal operativo, con el fin de definir las restricciones y necesidades técnicas críticas. Finalmente, el entorno organizacional abarca la cultura, estructura, procesos internos y normas de la empresa, como jerarquías, protocolos y políticas de seguridad, que influyen directamente en la viabilidad y adaptación del sistema; para capturar esta información se realizaron entrevistas con líderes de área, revisión de manuales organizacionales y análisis de los procesos existentes, asegurando que los requisitos se ajustaran a las prácticas y políticas internas de la organización.
+
+2.3 Modelo Conceptual 
+
+El modelo conceptual representa las principales entidades y relaciones que intervienen en la gestión comercial del negocio, abarcando desde la atención al cliente hasta el control administrativo de pagos y devoluciones. En este modelo, el proceso inicia con el cliente, quien realiza pedidos de productos. Cada pedido puede estar compuesto por uno o varios productos y constituye el punto de partida del ciclo comercial. El cliente también puede realizar devoluciones de un pedido; en caso de que se devuelva solo una parte, el pedido se modifica para reflejar la cantidad restante.
+
+El cliente es atendido por un vendedor, responsable de gestionar las ventas correspondientes a los pedidos. Cada venta puede implicar uno o varios pagos, dependiendo del valor total del pedido. El supervisor cumple la función de vigilar el desempeño del vendedor y supervisar el avance de las ventas, asegurando el cumplimiento de los procedimientos establecidos.
+
+Cuando un vendedor concreta una venta, registra la información asociada, como la fecha y el responsable de la operación. Estos datos se almacenan en un historial controlado por el administrador, quien también tiene a su cargo la verificación y control de los pagos. Los pagos generan información complementaria que se guarda en el historial junto con los detalles de la venta y, además, cada pago genera una factura que respalda formalmente la transacción.
+
+Asimismo, las devoluciones generan registros que se documentan en el historial, permitiendo mantener un control actualizado de las operaciones. Los productos son administrados exclusivamente por el administrador, quien gestiona su disponibilidad, actualiza los movimientos relacionados con ventas o devoluciones y vela por la coherencia de la información registrada en el sistema comercial.
+
+En conjunto, el modelo refleja una estructura organizada que permite comprender de manera integral el flujo de información y la interacción entre los distintos actores del negocio, asegurando el control y seguimiento de las operaciones en todas las etapas del proceso comercial.
+
+2.4 Reglas del negocio
+
+A continuación, se especifican las reglas que rigen el proceso actual de gestión comercial de la MIPYME:
+
+Conclusiones parciales
+
+El análisis del modelo de negocio actual permitió identificar los roles, actores y reglas que intervienen en los procesos de la MIPYME, poniendo en evidencia las limitaciones derivadas del manejo manual de pedidos, pagos, devoluciones e inventario. La elaboración del modelo conceptual facilitó la comprensión de las interacciones entre los actores del negocio y las actividades principales, revelando redundancias y oportunidades de automatización. Finalmente, el modelado detallado de las actividades y decisiones del negocio proporcionó una base sólida para el diseño posterior del sistema, asegurando la coherencia entre los procesos reales y las mejoras planteadas, y contribuyendo al fortalecimiento de la gestión comercial de la MIPYME.
+
+Capítulo III. Documentación de requisitos
+
+Introducción
+
+El presente capítulo tiene como propósito describir los requisitos que definen el comportamiento y las características de la solución informática propuesta. Se establecen los requisitos funcionales y no funcionales del sistema, así como su agrupación por casos de uso, los cuales constituyen la base para el diseño e implementación de la aplicación web.
+
+El proceso de levantamiento de requisitos se realizó mediante entrevistas con el personal involucrado, observación directa de los procesos actuales y análisis de las limitaciones del sistema manual. Posteriormente, los requisitos fueron priorizados y clasificados de acuerdo con su relevancia para el negocio y su complejidad técnica, siguiendo los principios de la metodología Extreme Programming (XP), que promueve la comunicación constante con el cliente y la adaptación continua a los cambios.
+
+3.1 Requisitos funcionales
+
+Los requisitos funcionales fueron determinados considerando las principales operaciones del negocio: gestión de pedidos, control de inventario, registro de pagos y administración de devoluciones. Se evaluaron bajo los criterios de prioridad (nivel de impacto en el funcionamiento del sistema) y complejidad (esfuerzo técnico estimado para su implementación).
+
+3.2 Requisitos no funcionales
+
+Los requisitos no funcionales fueron definidos tomando como referencia la clasificación propuesta por Sommerville (2011), que agrupa los atributos de calidad del software en categorías relacionadas con su desempeño, seguridad, mantenibilidad y usabilidad.
+
+3.2.1 Requisitos de rendimiento
+
+RnF 1.1. El sistema debe permitir la carga de las páginas principales en un tiempo menor a 3 segundos bajo condiciones normales de uso.
+
+RnF 1.2. La actualización del inventario y los pedidos debe reflejarse en menos de 2 segundos después de la confirmación de la acción.
+
+3.2.2 Requisitos de seguridad
+
+RnF 2.1. El sistema debe autenticar a los usuarios mediante credenciales únicas y cifradas.
+
+RnF 2.2. Los datos sensibles (como contraseñas y transacciones) deben almacenarse utilizando encriptación AES de 256 bits.
+
+RnF 2.3. Solo los usuarios con rol de administrador podrán acceder a los reportes financieros y de inventario.
+
+3.2.3 Requisitos de usabilidad
+
+RnF 3.1. La interfaz del sistema debe ser accesible desde dispositivos móviles, tabletas y computadoras de escritorio.
+
+RnF 3.2. El sistema debe mantener una estructura de navegación simple, con máximo tres niveles jerárquicos por menú.
+
+RnF 3.3. El sistema debe incluir mensajes de retroalimentación claros ante errores o acciones exitosas.
+
+3.2.4 Requisitos de mantenibilidad
+
+RnF 4.1. El código fuente debe seguir las convenciones de estilo de Python y JavaScript (PEP8 y ESLint).
+
+RnF 4.2. El sistema debe estar documentado para facilitar futuras modificaciones y ampliaciones.
+
+RnF 4.3. La base de datos debe permitir la incorporación de nuevas tablas sin alterar la estructura existente.
+
+3.3 Historias de usuario
+
+3.3 Agrupación de requisitos funcionales historia de usuario
+
+Los requisitos funcionales se agrupan según las historias de usuario, las cuales contienen las funcionalidades de la aplicación. Cada historia de usuario incluye los requisitos asociados que garantizan su correcta ejecución.
+
+Conclusiones parciales
+
+El análisis de los requisitos funcionales y no funcionales permitió identificar las necesidades clave de los distintos actores del sistema, poniendo en evidencia la importancia de gestionar de manera eficiente clientes, roles, productos, pedidos, pagos, envíos, devoluciones e inventario. La elaboración de historias de usuario facilitó la comprensión de las funcionalidades requeridas y su priorización según impacto en el negocio y complejidad técnica, revelando dependencias y oportunidades de optimización. Finalmente, la agrupación de requisitos funcionales por historias de usuario y la definición de criterios de aceptación proporcionaron una base sólida para el diseño e implementación del sistema, asegurando la trazabilidad, la coherencia con las operaciones reales y la alineación con las necesidades del negocio, contribuyendo al fortalecimiento de la gestión comercial y tecnológica de la MIPYME.
+
+Capítulo IV. Validación y gestión de requisitos 
+
+Introducción
+
+En este capítulo se presentan los casos de prueba diseñados para validar el correcto funcionamiento del sistema, basados en los requisitos funcionales identificados durante el análisis del proyecto. Cada caso de prueba describe de manera detallada los datos de entrada, las acciones a realizar y los resultados esperados, garantizando que los distintos procesos del software cumplan con los objetivos y necesidades del usuario. La elaboración de estos casos permite detectar posibles errores, verificar la integridad de las operaciones y asegurar que el sistema proporcione un comportamiento confiable y consistente en escenarios reales de uso.
+
+4.1 Técnica de validación de requisitos
+
+Para garantizar que cada Requisito Funcional (RF) definido se cumpla correctamente, se emplea la validación mediante casos de prueba (CP). Un CP es la descripción de una acción específica que se debe realizar con el software, detallando de manera precisa los datos de entrada, las tareas a ejecutar y los resultados esperados. Esta técnica permite verificar sistemáticamente que cada funcionalidad se comporte según lo previsto y facilita la detección de posibles errores antes de la implementación del sistema.
+
+Se opta por esta técnica porque ofrece un enfoque concreto y detallado para evaluar el cumplimiento de cada RF de manera individual, asegurando que todos los aspectos funcionales se controlen de forma estructurada. A continuación, se presentan los casos de prueba diseñados para validar cada uno de los RF identificados en el proyecto.
+
+Requisito: "Emitir panel administrativo / dashboard"
+
+Caso 1: Visualización de indicadores
+
+Entrada: Usuario administrador logueado
+
+Acción: Click "Abrir dashboard"
+
+Resultado esperado: Visualización de ventas, pedidos pendientes, stock crítico y alertas + mensaje "Dashboard cargado correctamente"
+
+Caso 2: Usuario sin permisos
+
+Entrada: Usuario vendedor logueado
+
+Acción: Click "Abrir dashboard"
+
+Resultado esperado: Mensaje "No tiene permisos para acceder al panel administrativo" + acceso denegado
+
+Requisito: "Emitir facturas legales"
+
+Caso 1: Generación de factura exitosa
+
+Entrada: Pedido pagado: 12345, Datos fiscales completos
+
+Acción: Click "Generar factura"
+
+Resultado esperado: Factura legal emitida en PDF + mensaje "Factura emitida correctamente"
+
+Caso 2: Pedido no pagado
+
+Entrada: Pedido: 12346, Estado: Pendiente
+
+Acción: Click "Generar factura"
+
+Resultado esperado: Mensaje "No se puede emitir factura, pedido no pagado"
+
+Requisito: "Consultar catálogos y estado de pedidos (solo lectura)"
+
+Caso 1: Consulta exitosa de catálogo
+
+Entrada: Usuario autenticado
+
+Acción: Click "Consultar catálogo"
+
+Resultado esperado: Listado de productos con detalles + mensaje "Consulta realizada correctamente"
+
+Caso 2: Consulta de estado de pedido
+
+Entrada: Pedido: 12345, Usuario autenticado
+
+Acción: Click "Consultar estado de pedido"
+
+Resultado esperado: Muestra el estado actual del pedido + mensaje "Consulta realizada correctamente"
+
+Caso 3: Usuario no autorizado
+
+Entrada: Usuario no autenticado
+
+Acción: Intentar consultar catálogo o estado
+
+Resultado esperado: Mensaje "Acceso denegado" + no se muestran datos
+
+Requisito: "Mantener y configurar el sistema"
+
+Caso 1: Configuración de parámetros exitosa
+
+Entrada: Usuario administrador, Modificación de stock mínimo a 10, Condiciones de pago a 30 días
+
+Acción: Click "Guardar configuración"
+
+Resultado esperado: Parámetros actualizados + mensaje "Configuración guardada correctamente"
+
+Caso 2: Usuario sin permisos
+
+Entrada: Usuario vendedor intentando modificar parámetros
+
+Acción: Click "Guardar configuración"
+
+Requisito: "Crear cuenta de cliente"
+
+Caso 1: Registro exitoso
+
+Entrada: Nombre: Juan Pérez, RUC: 123456789, Dirección: Av. Central 123, Email: juan@mail.com, Teléfono: 987654321
+
+Acción: Click "Registrar cuenta"
+
+Resultado esperado: Cuenta creada correctamente + mensaje "Cliente registrado exitosamente"
+
+Caso 2: Email ya registrado
+
+Entrada: Mismos datos que el caso 1 pero con email existente
+
+Acción: Click "Registrar cuenta"
+
+Resultado esperado: Mensaje "El email ya está registrado" + cuenta no creada
+
+Caso 3: Datos incompletos
+
+Entrada: Nombre vacío, RUC válido, Email válido
+
+Acción: Click "Registrar cuenta"
+
+Resultado esperado: Mensaje "Complete todos los campos obligatorios" + cuenta no creada
+
+Requisito: "Modificar datos de cliente"
+
+Caso 1: Modificación exitosa
+
+Entrada: Cliente existente: Juan Pérez, nuevo teléfono: 912345678
+
+Acción: Click "Actualizar datos"
+
+Resultado esperado: Datos actualizados correctamente + mensaje "Información actualizada"
+
+Caso 2: Cliente no existente
+
+Entrada: Cliente no registrado: Ana García
+
+Acción: Click "Actualizar datos"
+
+Resultado esperado: Mensaje "Cliente no encontrado" + cambios no aplicados
+
+Requisito: "Eliminar cliente"
+
+Caso 1: Eliminación exitosa
+
+Entrada: Cliente activo: Juan Pérez
+
+Acción: Click "Eliminar cliente"
+
+Resultado esperado: Cliente marcado como inactivo + mensaje "Cliente eliminado"
+
+Caso 2: Cliente ya inactivo
+
+Entrada: Cliente previamente eliminado: Ana García
+
+Acción: Click "Eliminar cliente"
+
+Resultado esperado: Mensaje "Cliente ya se encuentra inactivo"
+
+Requisito: "Consultar clientes"
+
+Caso 1: Consulta exitosa
+
+Entrada: Buscar cliente por nombre: Juan Pérez
+
+Acción: Click "Buscar"
+
+Resultado esperado: Lista de clientes con coincidencias + detalle de historial de compras
+
+Caso 2: Cliente no encontrado
+
+Entrada: Buscar cliente por nombre: Pedro Gómez
+
+Acción: Click "Buscar"
+
+Resultado esperado: Mensaje "No se encontraron clientes"
+
+Requisito: "Iniciar sesión (autenticación)"
+
+Caso 1: Inicio de sesión exitoso
+
+Entrada: Email válido: juan@mail.com + contraseña correcta
+
+Acción: Click "Iniciar Sesión"
+
+Resultado esperado: Redirección a dashboard + mensaje "Bienvenido"
+
+Caso 2: Contraseña incorrecta
+
+Entrada: Email válido + contraseña incorrecta
+
+Acción: Click "Iniciar Sesión"
+
+Resultado esperado: Mensaje "Credenciales inválidas" + contador de intentos
+
+Caso 3: Email no registrado
+
+Entrada: Email no registrado + cualquier contraseña
+
+Acción: Click "Iniciar Sesión"
+
+Resultado esperado: Mensaje "Cuenta no encontrada"
+
+Requisito: "Cerrar sesión"
+
+Caso 1: Cierre de sesión exitoso
+
+Entrada: Usuario logueado en el sistema
+
+Acción: Click "Cerrar sesión"
+
+Resultado esperado: Usuario desconectado + redirección a la pantalla de inicio + mensaje "Sesión cerrada exitosamente"
+
+Caso 2: Cierre de sesión sin sesión activa
+
+Entrada: Intento de cierre de sesión sin estar logueado
+
+Acción: Click "Cerrar sesión"
+
+Resultado esperado: Mensaje "No hay sesión activa"
+
+Requisito: "Recuperar contraseña"
+
+Caso 1: Recuperación exitosa mediante correo
+
+Entrada: Email registrado: juan@mail.com
+
+Acción: Click "Recuperar contraseña"
+
+Resultado esperado: Envío de correo con enlace para restablecer contraseña + mensaje "Se ha enviado un correo para restablecer su contraseña"
+
+Caso 2: Email no registrado
+
+Entrada: Email no registrado: ana@mail.com
+
+Acción: Click "Recuperar contraseña"
+
+Resultado esperado: Mensaje "El correo no está registrado"
+
+Caso 3: Token de recuperación inválido
+
+Entrada: Token de restablecimiento caducado o incorrecto
+
+Acción: Intentar cambiar contraseña usando token
+
+Resultado esperado: Mensaje "Token inválido o expirado" + cambio no realizado
+
+Requisito: "Crear rol"
+
+Caso 1: Creación exitosa
+
+Entrada: Nombre del rol: Vendedor, permisos: ventas, consultar pedidos
+
+Acción: Click "Crear rol"
+
+Resultado esperado: Rol registrado + mensaje "Rol creado exitosamente"
+
+Caso 2: Nombre de rol duplicado
+
+Entrada: Nombre de rol ya existente: Administrador
+
+Acción: Click "Crear rol"
+
+Resultado esperado: Mensaje "El rol ya existe" + rol no creado
+
+Requisito: "Modificar rol"
+
+Caso 1: Modificación exitosa
+
+Entrada: Rol existente: Vendedor, agregar permisos: descuentos
+
+Acción: Click "Actualizar rol"
+
+Resultado esperado: Permisos actualizados + mensaje "Rol modificado correctamente"
+
+Caso 2: Rol no existente
+
+Entrada: Rol inexistente: Supervisor
+
+Acción: Click "Actualizar rol"
+
+Resultado esperado: Mensaje "Rol no encontrado" + cambios no aplicados
+
+Requisito: "Eliminar rol"
+
+Caso 1: Eliminación exitosa
+
+Entrada: Rol existente: Contador
+
+Acción: Click "Eliminar rol"
+
+Resultado esperado: Rol marcado como inactivo + mensaje "Rol eliminado exitosamente"
+
+Caso 2: Rol ya inactivo
+
+Entrada: Rol previamente inactivo: Invitado
+
+Acción: Click "Eliminar rol"
+
+Resultado esperado: Mensaje "El rol ya se encuentra inactivo"
+
+Requisito: "Consultar roles"
+
+Caso 1: Consulta exitosa
+
+Entrada: Buscar roles existentes
+
+Acción: Click "Consultar roles"
+
+Resultado esperado: Listado de roles con sus permisos y detalles
+
+Caso 2: Rol no encontrado
+
+Entrada: Buscar rol inexistente: Supervisor
+
+Acción: Click "Consultar roles"
+
+Resultado esperado: Mensaje "No se encontraron roles"
+
+Requisito: "Crear producto"
+
+Caso 1: Registro exitoso
+
+Entrada: Nombre: Ácido Acético, Código: AA123, Presentación: Botella 500ml, Precio: 50 USD, Unidad: ml
+
+Acción: Click "Registrar producto"
+
+Resultado esperado: Producto registrado + mensaje "Producto creado exitosamente"
+
+Caso 2: Código de producto duplicado
+
+Entrada: Código ya existente: AA123
+
+Acción: Click "Registrar producto"
+
+Resultado esperado: Mensaje "Código de producto ya registrado" + producto no creado
+
+Caso 3: Datos incompletos
+
+Entrada: Nombre vacío, Código válido, Precio: 50 USD
+
+Acción: Click "Registrar producto"
+
+Resultado esperado: Mensaje "Complete todos los campos obligatorios" + producto no creado
+
+Requisito: "Modificar producto"
+
+Caso 1: Modificación exitosa
+
+Entrada: Producto existente: Ácido Acético, nuevo precio: 55 USD
+
+Acción: Click "Actualizar producto"
+
+Resultado esperado: Datos del producto actualizados + mensaje "Producto modificado correctamente"
+
+Caso 2: Producto no existente
+
+Entrada: Producto inexistente: Solución X
+
+Acción: Click "Actualizar producto"
+
+Resultado esperado: Mensaje "Producto no encontrado" + cambios no aplicados
+
+Requisito: "Eliminar producto"
+
+Caso 1: Eliminación exitosa
+
+Entrada: Producto existente: Ácido Acético
+
+Acción: Click "Eliminar producto"
+
+Resultado esperado: Producto marcado como inactivo + mensaje "Producto eliminado exitosamente"
+
+Caso 2: Producto ya inactivo
+
+Entrada: Producto previamente inactivo: Botella Vacía
+
+Acción: Click "Eliminar producto"
+
+Resultado esperado: Mensaje "El producto ya se encuentra inactivo"
+
+Requisito: "Consultar productos"
+
+Caso 1: Consulta exitosa por nombre
+
+Entrada: Buscar producto: Ácido Acético
+
+Acción: Click "Buscar"
+
+Resultado esperado: Listado de productos que coinciden + detalles de precio, stock y presentación
+
+Caso 2: Producto no encontrado
+
+Entrada: Buscar producto: Solución Y
+
+Acción: Click "Buscar"
+
+Resultado esperado: Mensaje "No se encontraron productos"
+
+Caso 3: Filtro por categoría
+
+Entrada: Filtro: Botellas 500ml
+
+Acción: Aplicar filtro
+
+Resultado esperado: Listado de productos que cumplen el filtro + detalles
+
+Requisito: "Crear categoría / presentación"
+
+Caso 1: Creación exitosa
+
+Entrada: Nombre de categoría: Botellas 500ml
+
+Acción: Click "Crear categoría"
+
+Resultado esperado: Categoría registrada + mensaje "Categoría creada exitosamente"
+
+Caso 2: Categoría ya existente
+
+Entrada: Nombre de categoría duplicada: Botellas 500ml
+
+Acción: Click "Crear categoría"
+
+Resultado esperado: Mensaje "La categoría ya existe" + categoría no creada
+
+Caso 3: Datos incompletos
+
+Entrada: Nombre vacío
+
+Acción: Click "Crear categoría"
+
+Resultado esperado: Mensaje "Complete todos los campos obligatorios" + categoría no creada
+
+Requisito: "Modificar categoría"
+
+Caso 1: Modificación exitosa
+
+Entrada: Categoría existente: Botellas 500ml, nuevo nombre: Botellas 600ml
+
+Acción: Click "Actualizar categoría"
+
+Resultado esperado: Categoría modificada + mensaje "Categoría actualizada correctamente"
+
+Caso 2: Categoría no existente
+
+Entrada: Categoría inexistente: Frascos 100ml
+
+Acción: Click "Actualizar categoría"
+
+Resultado esperado: Mensaje "Categoría no encontrada" + cambios no aplicados
+
+Requisito: "Eliminar categoría"
+
+Caso 1: Eliminación exitosa
+
+Entrada: Categoría existente: Botellas 600ml
+
+Acción: Click "Eliminar categoría"
+
+Resultado esperado: Categoría marcada como inactiva + mensaje "Categoría eliminada exitosamente"
+
+Caso 2: Categoría ya inactiva
+
+Entrada: Categoría previamente eliminada: Frascos 250ml
+
+Acción: Click "Eliminar categoría"
+
+Resultado esperado: Mensaje "La categoría ya se encuentra inactiva"
+
+Requisito: "Consultar categorías"
+
+Caso 1: Consulta exitosa por nombre
+
+Entrada: Buscar categoría: Botellas 600ml
+
+Acción: Click "Buscar"
+
+Resultado esperado: Listado de categorías que coinciden + detalles de presentación
+
+Caso 2: Categoría no encontrada
+
+Entrada: Buscar categoría: Frascos 100ml
+
+Acción: Click "Buscar"
+
+Resultado esperado: Mensaje "No se encontraron categorías"
+
+Caso 3: Filtro por tipo de presentación
+
+Entrada: Filtro: Botellas
+
+Acción: Aplicar filtro
+
+Resultado esperado: Listado de categorías que cumplen el filtro + detalles
+
+Requisito: "Crear pedido"
+
+Caso 1: Pedido exitoso
+
+Entrada: Cliente: Juan Pérez, Producto: Ácido Acético, Cantidad: 10, Condiciones: Entrega en 2 días
+
+Acción: Click "Crear pedido"
+
+Resultado esperado: Pedido registrado + número de pedido único + mensaje "Pedido creado correctamente"
+
+Caso 2: Producto no disponible
+
+Entrada: Cliente: Juan Pérez, Producto: Solución X (sin stock)
+
+Acción: Click "Crear pedido"
+
+Resultado esperado: Mensaje "Producto no disponible" + pedido no registrado
+
+Caso 3: Datos incompletos
+
+Entrada: Cliente válido + Producto válido pero cantidad vacía
+
+Acción: Click "Crear pedido"
+
+Resultado esperado: Mensaje "Complete todos los campos obligatorios" + pedido no registrado
+
+Requisito: "Validar disponibilidad / reservar stock"
+
+Caso 1: Stock disponible
+
+Entrada: Producto: Ácido Acético, Cantidad solicitada: 5, Stock disponible: 10
+
+Acción: Click "Validar y reservar stock"
+
+Resultado esperado: Stock reservado correctamente + mensaje "Stock reservado exitosamente"
+
+Caso 2: Stock insuficiente
+
+Entrada: Producto: Ácido Acético, Cantidad solicitada: 15, Stock disponible: 10
+
+Acción: Click "Validar y reservar stock"
+
+Resultado esperado: Mensaje "Stock insuficiente" + reserva no realizada
+
+Requisito: "Confirmar pedido provisional"
+
+Caso 1: Confirmación exitosa
+
+Entrada: Pedido provisional: 12345, Estado actual: Pendiente
+
+Acción: Click "Confirmar pedido"
+
+Resultado esperado: Estado cambiado a "Reservado" + mensaje "Pedido confirmado provisionalmente"
+
+Caso 2: Pedido no encontrado
+
+Entrada: Pedido inexistente: 99999
+
+Acción: Click "Confirmar pedido"
+
+Resultado esperado: Mensaje "Pedido no encontrado" + no se realiza cambio de estado
+
+Requisito: "Modificar estado de pedido"
+
+Caso 1: Cambio de estado exitoso
+
+Entrada: Pedido: 12345, Estado actual: Pendiente, Nuevo estado: Confirmado
+
+Acción: Click "Actualizar estado"
+
+Resultado esperado: Estado actualizado + mensaje "Estado del pedido modificado correctamente"
+
+Caso 2: Pedido no existente
+
+Entrada: Pedido: 99999, Nuevo estado: Enviado
+
+Acción: Click "Actualizar estado"
+
+Resultado esperado: Mensaje "Pedido no encontrado" + estado no modificado
+
+Requisito: "Registrar pago"
+
+Caso 1: Pago total exitoso
+
+Entrada: Pedido: 12345, Monto: 500 USD, Forma de pago: Transferencia
+
+Acción: Click "Registrar pago"
+
+Resultado esperado: Estado del pedido cambia a "Pagado" + recibo generado + mensaje "Pago registrado correctamente"
+
+Caso 2: Pago parcial
+
+Entrada: Pedido: 12346, Monto: 200 USD de 500 USD, Forma de pago: Tarjeta
+
+Acción: Click "Registrar pago"
+
+Resultado esperado: Estado del pedido cambia a "Pago parcial" + mensaje "Pago parcial registrado correctamente"
+
+Caso 3: Pedido no existente
+
+Entrada: Pedido: 99999, Monto: 100 USD
+
+Acción: Click "Registrar pago"
+
+Resultado esperado: Mensaje "Pedido no encontrado" + pago no registrado
+
+Requisito: "Pagar fraccionados / abonos"
+
+Caso 1: Registro de primer abono
+
+Entrada: Pedido: 12347, Monto: 200 USD
+
+Acción: Click "Registrar abono"
+
+Resultado esperado: Abono registrado + saldo pendiente actualizado + mensaje "Abono registrado correctamente"
+
+Caso 2: Registro de segundo abono
+
+Entrada: Pedido: 12347, Monto: 300 USD
+
+Acción: Click "Registrar abono"
+
+Resultado esperado: Pedido marcado como "Pagado" + mensaje "Pago completado con éxito"
+
+Caso 3: Abono mayor al saldo
+
+Entrada: Pedido: 12348, Monto: 600 USD (saldo pendiente: 500 USD)
+
+Acción: Click "Registrar abono"
+
+Resultado esperado: Mensaje "El monto excede el saldo pendiente" + abono no registrado
+
+Requisito: "Verificar automáticamente pagos"
+
+Caso 1: Pago total confirmado automáticamente
+
+Entrada: Pedido: 12345, Pago recibido: 500 USD
+
+Acción: Sistema valida automáticamente
+
+Resultado esperado: Estado del pedido cambia a "Pagado" + mensaje "Pago verificado automáticamente"
+
+Caso 2: Pago parcial recibido
+
+Entrada: Pedido: 12346, Pago recibido: 200 USD de 500 USD
+
+Acción: Sistema valida automáticamente
+
+Resultado esperado: Estado del pedido cambia a "Pago parcial" + mensaje "Pago parcial registrado automáticamente"
+
+Caso 3: Pago no reconocido
+
+Entrada: Pago con referencia incorrecta
+
+Acción: Sistema valida automáticamente
+
+Resultado esperado: Mensaje "Pago no reconocido" + no se modifica estado del pedido
+
+Requisito: "Generar recibo / comprobante de venta"
+
+Caso 1: Generación exitosa de recibo
+
+Entrada: Pedido pagado: 12345
+
+Acción: Click "Generar recibo"
+
+Resultado esperado: Recibo digital (PDF) generado + mensaje "Recibo emitido correctamente"
+
+Caso 2: Pedido no pagado
+
+Entrada: Pedido: 12346, Estado: Pendiente
+
+Acción: Click "Generar recibo"
+
+Resultado esperado: Mensaje "No se puede generar recibo, pedido no pagado"
+
+Requisito: "Emitir nota de crédito / reembolso"
+
+Caso 1: Reembolso exitoso
+
+Entrada: Pedido: 12347, Motivo: Devolución de producto
+
+Acción: Click "Emitir nota de crédito"
+
+Resultado esperado: Nota de crédito generada + saldo actualizado + mensaje "Reembolso emitido correctamente"
+
+Caso 2: Pedido no existente
+
+Entrada: Pedido: 99999
+
+Acción: Click "Emitir nota de crédito"
+
+Resultado esperado: Mensaje "Pedido no encontrado" + nota no emitida
+
+Requisito: "Crear registro de envío"
+
+Caso 1: Registro exitoso
+
+Entrada: Pedido: 12345, Transportista: DHL, Número de guía: 987654321, Fecha: 04/11/2025
+
+Acción: Click "Registrar envío"
+
+Resultado esperado: Envío registrado + mensaje "Registro de envío creado correctamente"
+
+Caso 2: Datos incompletos
+
+Entrada: Pedido: 12346, Transportista vacío
+
+Acción: Click "Registrar envío"
+
+Resultado esperado: Mensaje "Complete todos los campos obligatorios" + registro no creado
+
+Requisito: "Confirmar entrega por cliente"
+
+Caso 1: Confirmación exitosa
+
+Entrada: Pedido: 12345, Cliente confirma recepción
+
+Acción: Click "Confirmar entrega"
+
+Resultado esperado: Estado del pedido cambia a "Entregado" + mensaje "Entrega confirmada"
+
+Caso 2: Pedido no entregado aún
+
+Entrada: Pedido: 12346, Estado: Enviado
+
+Acción: Click "Confirmar entrega"
+
+Resultado esperado: Mensaje "No se puede confirmar, pedido aún no entregado"
+
+Requisito: "Iniciar devolución"
+
+Caso 1: Solicitud de devolución exitosa
+
+Entrada: Pedido: 12345, Motivo: Producto dañado, Estado: Entregado
+
+Acción: Click "Iniciar devolución"
+
+Resultado esperado: Devolución registrada + mensaje "Solicitud de devolución creada correctamente"
+
+ Caso 2: Pedido no entregado**
+
+Entrada: Pedido: 12346, Estado: Enviado
+
+Acción: Click "Iniciar devolución"
+
+Resultado esperado: Mensaje "No se puede iniciar devolución, pedido no entregado"
+
+Caso 3: Pedido no existente
+
+Entrada: Pedido: 99999
+
+Acción: Click "Iniciar devolución"
+
+Resultado esperado: Mensaje "Pedido no encontrado" + devolución no registrada
+
+Requisito: "Actualizar inventario por venta"
+
+Caso 1: Actualización exitosa
+
+Entrada: Producto: Ácido Acético, Cantidad vendida: 10, Stock inicial: 50
+
+Acción: Sistema actualiza inventario automáticamente
+
+Resultado esperado: Stock actualizado: 40 unidades + mensaje "Inventario actualizado correctamente"
+
+Caso 2: Venta superior al stock disponible
+
+Entrada: Producto: Ácido Acético, Cantidad vendida: 60, Stock inicial: 50
+
+Acción: Sistema actualiza inventario
+
+Resultado esperado: Mensaje "Stock insuficiente, no se puede procesar venta" + stock sin cambios
+
+Requisito: "Actualizar inventario por devolución"
+
+Caso 1: Actualización exitosa
+
+Entrada: Producto: Ácido Acético, Cantidad devuelta: 5, Stock inicial: 40
+
+Acción: Sistema incrementa inventario
+
+Resultado esperado: Stock actualizado: 45 unidades + mensaje "Inventario actualizado por devolución"
+
+Caso 2: Producto no registrado
+
+Entrada: Producto: Solución X, Cantidad devuelta: 5
+
+Acción: Sistema incrementa inventario
+
+Resultado esperado: Mensaje "Producto no encontrado" + inventario sin cambios
+
+Requisito: "Ajustar manualmente el inventario"
+
+Caso 1: Ajuste positivo exitoso
+
+Entrada: Producto: Ácido Acético, Cantidad ajustada: +10
+
+Acción: Click "Registrar ajuste"
+
+Resultado esperado: Inventario actualizado: stock incrementado + mensaje "Ajuste registrado correctamente"
+
+Caso 2: Ajuste negativo exitoso
+
+Entrada: Producto: Ácido Acético, Cantidad ajustada: -5
+
+Acción: Click "Registrar ajuste"
+
+Resultado esperado: Inventario actualizado: stock decrementado + mensaje "Ajuste registrado correctamente"
+
+Caso 3: Datos incompletos
+
+Entrada: Producto vacío, Cantidad: 5
+
+Acción: Click "Registrar ajuste"
+
+Resultado esperado: Mensaje "Complete todos los campos obligatorios" + inventario no modificado
+
+Requisito: "Emitir alertas de stock mínimo"
+
+Caso 1: Stock por debajo del mínimo
+
+Entrada: Producto: Ácido Acético, Stock: 5, Stock mínimo configurado: 10
+
+Acción: Sistema genera alerta automáticamente
+
+Resultado esperado: Notificación enviada + mensaje "Alerta de stock mínimo generada"
+
+Caso 2: Stock por encima del mínimo
+
+Entrada: Producto: Ácido Acético, Stock: 15, Stock mínimo: 10
+
+Acción: Sistema revisa inventario
+
+Resultado esperado: No se genera alerta + mensaje "Stock suficiente"
+
+Requisito: "Mantener histórico de pedidos y transacciones"
+
+Caso 1: Registro de transacciones exitoso
+
+Entrada: Pedido: 12345, Pago: 500 USD, Devolución: 0
+
+Acción: Sistema registra automáticamente todas las operaciones
+
+Resultado esperado: Historial actualizado + mensaje "Historial de pedidos y transacciones actualizado"
+
+Caso 2: Pedido inexistente
+
+Entrada: Pedido: 99999
+
+Acción: Sistema intenta registrar transacción
+
+Resultado esperado: Mensaje "Pedido no encontrado" + historial sin cambios
+
+Requisito: "Generar reportes operativos básicos"
+
+Caso 1: Reporte exitoso de ventas
+
+Entrada: Fecha inicio: 01/11/2025, Fecha fin: 04/11/2025
+
+Acción: Click "Generar reporte"
+
+Resultado esperado: Reporte de ventas generado + listado de pedidos por estado + mensaje "Reporte generado correctamente"
+
+Caso 2: Sin datos en rango seleccionado
+
+Entrada: Fecha inicio: 01/01/2020, Fecha fin: 05/01/2020
+
+Acción: Click "Generar reporte"
+
+Resultado esperado: Mensaje "No se encontraron datos para el periodo seleccionado"
+
+Requisito: "Exportar / importar datos (CSV/Excel)"
+
+Caso 1: Exportación exitosa
+
+Entrada: Listado de clientes
+
+Acción: Click "Exportar CSV"
+
+Resultado esperado: Archivo CSV generado + mensaje "Exportación realizada correctamente"
+
+Caso 2: Importación exitosa
+
+Entrada: Archivo Excel con productos válidos
+
+Acción: Click "Importar datos"
+
+Resultado esperado: Datos importados correctamente + mensaje "Importación realizada exitosamente"
+
+Caso 3: Archivo con formato incorrecto
+
+Entrada: Archivo con columnas faltantes
+
+Acción: Click "Importar datos"
+
+Resultado esperado: Mensaje "Archivo inválido, revisar formato" + importación no realizada
+
+Requisito: "Auditar actividades"
+
+Caso 1: Registro de acción de creación
+
+Entrada: Usuario crea un producto: Ácido Acético
+
+Acción: Sistema registra automáticamente la acción
+
+Resultado esperado: Auditoría refleja creación + mensaje "Actividad registrada en auditoría"
+
+Caso 2: Registro de acción de eliminación
+
+Entrada: Usuario elimina cliente: Juan Pérez
+
+Acción: Sistema registra automáticamente la acción
+
+Resultado esperado: Auditoría refleja eliminación + mensaje "Actividad registrada en auditoría"
+
+Requisito: "Notificar automáticamente"
+
+Caso 1: Notificación de pedido confirmado
+
+Entrada: Pedido: 12345 confirmado
+
+Acción: Sistema envía correo/SMS automáticamente
+
+Resultado esperado: Cliente recibe notificación + mensaje "Notificación enviada correctamente"
+
+Caso 2: Notificación de pago recibido
+
+Entrada: Pedido: 12346, Pago registrado
+
+Acción: Sistema envía correo/SMS automáticamente
+
+Resultado esperado: Cliente recibe notificación + mensaje "Notificación enviada correctamente"
+
+Requisito: "Emitir panel administrativo / dashboard"
+
+Caso 1: Visualización de indicadores
+
+Entrada: Usuario administrador logueado
+
+Acción: Click "Abrir dashboard"
+
+Resultado esperado: Visualización de ventas, pedidos pendientes, stock crítico y alertas + mensaje "Dashboard cargado correctamente"
+
+Caso 2: Usuario sin permisos
+
+Entrada: Usuario vendedor logueado
+
+Acción: Click "Abrir dashboard"
+
+Resultado esperado: Mensaje "No tiene permisos para acceder al panel administrativo" + acceso denegado
+
+Requisito: "Emitir facturas legales"
+
+Caso 1: Generación de factura exitosa
+
+Entrada: Pedido pagado: 12345, Datos fiscales completos
+
+Acción: Click "Generar factura"
+
+Resultado esperado: Factura legal emitida en PDF + mensaje "Factura emitida correctamente"
+
+Caso 2: Pedido no pagado
+
+Entrada: Pedido: 12346, Estado: Pendiente
+
+Acción: Click "Generar factura"
+
+Resultado esperado: Mensaje "No se puede emitir factura, pedido no pagado"
+
+Requisito: "Consultar catálogos y estado de pedidos (solo lectura)"
+
+Caso 1: Consulta exitosa de catálogo
+
+Entrada: Usuario autenticado
+
+Acción: Click "Consultar catálogo"
+
+Resultado esperado: Listado de productos con detalles + mensaje "Consulta realizada correctamente"
+
+Caso 2: Consulta de estado de pedido
+
+Entrada: Pedido: 12345, Usuario autenticado
+
+Acción: Click "Consultar estado de pedido"
+
+Resultado esperado: Muestra el estado actual del pedido + mensaje "Consulta realizada correctamente"
+
+Caso 3: Usuario no autorizado
+
+Entrada: Usuario no autenticado
+
+Acción: Intentar consultar catálogo o estado
+
+Resultado esperado: Mensaje "Acceso denegado" + no se muestran datos
+
+Requisito: "Mantener y configurar el sistema"
+
+Caso 1: Configuración de parámetros exitosa
+
+Entrada: Usuario administrador, Modificación de stock mínimo a 10, Condiciones de pago a 30 días
+
+Acción: Click "Guardar configuración"
+
+Resultado esperado: Parámetros actualizados + mensaje "Configuración guardada correctamente"
+
+Caso 2: Usuario sin permisos
+
+Entrada: Usuario vendedor intentando modificar parámetros
+
+Acción: Click "Guardar configuración"
+
+Resultado esperado: Mensaje "No tiene permisos para modificar la configuración" + cambios no aplicados
+
+4.2  Técnicas gestión de requisitos
+
+Se hizo uso de las matrices de trazabilidad relacionando cada requisito con el frame correspondiente de la interfaz
+
+..\..\Matrix Diagram1.xls
+
+Matrix2.xls
+
+Conclusiones parciales
+
+Como resultado de la elaboración de los casos de prueba, se logró establecer un conjunto estructurado de escenarios que permiten verificar el correcto funcionamiento del sistema frente a los requisitos funcionales identificados, el uso de matrices de trazabilidad ayudo a rectificar el uso de cada requisito en la interfaz. Cada caso documenta de manera precisa los datos de entrada, las acciones a ejecutar y los resultados esperados, garantizando que las funcionalidades críticas del software se comporten de manera confiable. Este proceso no solo facilita la detección temprana de errores y fallas, sino que también contribuye a asegurar la calidad, la consistencia y la eficiencia de las operaciones dentro del sistema. Asimismo, la implementación de los casos de prueba sirve como guía para futuros mantenimientos y actualizaciones, proporcionando un marco de referencia sólido que respalda la continuidad y mejora del software.
+
+Capítulo V. Modela de la estructura y comportamiento
+
+Introducción
+
+El presente capítulo desarrolla el modelado de la estructura y el comportamiento del sistema desde la perspectiva del análisis, tomando como base las Historias de Usuario definidas en la etapa de documentación de requisitos. A partir de estas historias, se identifican las entidades principales del dominio, sus responsabilidades y las relaciones necesarias para dar soporte a los procesos descritos por los usuarios finales.
+
+El diagrama de clases del análisis refleja la comprensión conceptual del sistema, sin incluir aún detalles de implementación, y permite visualizar los objetos relevantes y su organización lógica. Este modelo constituye una herramienta fundamental para validar la coherencia entre los requisitos y la solución propuesta, además de servir como insumo directo para el diseño posterior.
+
+Complementariamente, se presentan los diagramas de interacción correspondientes, los cuales muestran la secuencia de mensajes entre objetos en escenarios clave derivados de las Historias de Usuario. Estos diagramas permiten comprender el flujo dinámico del sistema y verificar que el comportamiento esperado se alinea con las necesidades funcionales establecidas.
+
+El contenido de este capítulo ofrece una representación clara, estructurada y orientada al dominio del problema, fortaleciendo la transición hacia las etapas de diseño, implementación y validación del sistema.
+
+5.1  Diagramas de clases del análisis
+
+Descripción de clases 
+
+5.2 Diagramas de Comunicación
+
+Iniciar sesión
+
+Gestionar Usuarios y roles
+
+Gestionar Productos
+
+Administrar Pedidos
+
+Gestionar pagos
+
+Confirmar Entrega
+
+Realizar devolución
+
+Generar Historial
+
+Listar Clientes
+
+Conclusiones parciales
+
+Posterior a realizar los diagramas de análisis y de comunicación tenemos todos los elementos para implementar cada una de las características que debe tener el sistema, identificando las principales clases a diseñar y los métodos que deben incorporar cada una, así como las acciones a las que debe responder cada método según el usuario que interactúe, devolviendo siempre una respuesta ya sea de aceptación o de rechazo.
+
+Conclusiones generales
+
+El análisis integral de los procesos de la MIPYME permitió identificar las áreas críticas y oportunidades de mejora, evidenciando que la automatización de la gestión de clientes, pedidos, pagos e inventario puede incrementar significativamente la eficiencia operativa.
+
+La elaboración del modelo conceptual y la identificación de roles, actores y reglas de negocio facilitaron la comprensión del flujo de información y los procedimientos internos, contribuyendo a la estandarización y documentación de los procesos.
+
+La definición y priorización de los Requisitos Funcionales (RF) permitió establecer de manera clara las funcionalidades necesarias del sistema, garantizando que el desarrollo se enfoque en cubrir las necesidades reales del negocio.
+
+La elaboración de casos de prueba asociados a los RF permitió validar cada requisito de manera sistemática, asegurando que las funcionalidades implementadas cumplen con los objetivos propuestos y reduciendo riesgos de errores o inconsistencias en el sistema.
+
+La propuesta tecnológica se orienta a optimizar los recursos de la empresa, garantizar la disponibilidad de información en tiempo real y permitir la toma de decisiones basada en datos confiables.
+
+Finalmente, el proyecto demuestra que la integración de procesos, la digitalización de la gestión empresarial y la validación formal de los requisitos son factores clave para la competitividad y sostenibilidad de las MIPYMES en un entorno económico dinámico.
+
+Recomendaciones
+
+Implementar un sistema tecnológico integral (CRM y/o ERP) que automatice la gestión de clientes, pedidos, pagos e inventario, adaptado a las necesidades específicas de la MIPYME.
+
+Mantener actualizados los Requisitos Funcionales (RF) y documentar cualquier cambio en los procesos o en las necesidades del negocio, para asegurar que el sistema continúe cumpliendo sus objetivos.
+
+Desarrollar y ejecutar de manera periódica casos de prueba asociados a los RF, garantizando que las funcionalidades implementadas sigan siendo válidas y confiables frente a modificaciones futuras del sistema o del negocio.
+
+Capacitar al personal en el uso del sistema y en la interpretación de los resultados generados, fomentando la adopción tecnológica y el correcto manejo de la información.
+
+Realizar auditorías periódicas de procesos y datos, evaluando la eficiencia del sistema, detectando posibles errores y optimizando continuamente las operaciones.
+
+Promover una cultura de mejora continua, donde la integración de nuevas herramientas tecnológicas y la revisión constante de requisitos y pruebas contribuyan a la competitividad y sostenibilidad de la empresa.
+
+Referencias Bibliográficas
+
+1.	González Pérez, G. (2022). Automatización y dinámica del mercado laboral en la industria automotriz en México. Economía Teoría y Práctica, (56), 67-96.
+
+2.	Guerola-Navarro, V., Oltra-Badenes, R., & Gil-Gomez, H. (2020). Análisis de la relación entre el grado de introducción de CRM y los beneficios de la empresa a través del Desempeño Organizacional y la Innovación Empresarial. 3C Empresa. Investigación y Pensamiento Crítico, 9(1), 67-87. doi 10.179933cemp.2020.090141.67-87
+
+3.	Ramírez Vivanco, A. E., Procel Romero, L. P., & Solórzano Solórzano, S. S. (2021). Estrategias de Internacionalización para la oferta exportable de las MIPYMES en El Oro, Ecuador. Pro Sciences, 5(41), 1603-1625.
+
+4.	Sommerville, I. (2011). Ingeniería de software (9a ed.). Pearson Educación.
+
+Sistema | Tipo | Gestión de Clientes | Gestión de Pedidos y Pagos | Enfoque
+
+HubSpot CRM | CRM en la nube | Sí | Parcial | Marketing y ventas digitales
+
+Zoho CRM | SaaS Empresarial | Sí | Sí | Ventas y automatización comercial
+
+Bitrix24 | CRM colaborativo | Sí | Sí | Comunicación interna y ventas
+
+Odoo CRM | Módulo integrado | Sí | Sí | Gestión integral empresarial
+
+Freshsales | CRM en la nube | Sí | Parcial | Seguimiento de clientes potenciales
+
+Zoom LC Odoo | ERP y CRM | Sí | Sí | Gestión integral empresarial con módulos de ventas, compras, contabilidad y atención al cliente.(adaptado por DESOFT al entorno cubano)
+
+No | Clasificación | Nombre | Descripción
+
+1 | Hecho | Registro Manual de Pedidos | Los pedidos de los clientes se registran manualmente, evidenciando la operación actual del negocio.
+
+2 | Hecho | Control de Inventario Empírico | La existencia de productos se verifica mediante conteos físicos en almacén.
+
+3 | Restricción | Actualización Diferida | Los cambios en inventario y ventas deben cumplirse con actualizaciones no inmediatas, limitando la consistencia de la información.
+
+4 | Computacional | Cálculo de Totales | Se requiere calcular montos y balances mediante operaciones definidas, actualmente realizadas en hojas de cálculo.
+
+5 | Restricción | Consolidación de Datos | Los reportes de ventas y existencias deben consolidarse manualmente, afectando la eficiencia del proceso.
+
+6 | Restricción | Priorización Temporal | Los reportes financieros se generan semanalmente, limitando la visibilidad inmediata de ventas.
+
+7 | Facilitador de acción | Difusión de Información por Canales Informales | Los informes se transmiten por medios no oficiales, facilitando la acción pero sin centralización de datos.
+
+8 | Restricción | Sincronización entre Áreas | La información entre ventas e inventario no se sincroniza en tiempo real, restringiendo la eficiencia del proceso.
+
+9 | Hecho | Variabilidad Operativa | Los procesos operativos varían según tipo de producto o temporada, mostrando la naturaleza actual de las operaciones.
+
+No. | Nombre | Descripción | Prioridad | Complejidad
+
+RF1 | Crear cuenta de cliente | Permitir registrar cuentas de clientes con datos de contacto (nombre, RUC/ID, dirección, correo, teléfonos). | Alta | Media
+
+RF2 | Modificar datos de cliente | Permitir actualizar la información del cliente registrada(nombre, dirección, correo, teléfonos). | Alta | Media
+
+RF3 | Eliminar cliente | Permitir marcar o eliminar clientes inactivos según política(Se eliminaran todos los pedidos de ese cliente, historial de acción y pagos correspondiente). | Media | Media
+
+RF4 | Consultar clientes | Listar clientes, asi como sus datos e información de contacto(nombre, dirección, correo, teléfonos). | Alta | Baja
+
+RF5 | Iniciar  sesión (autenticación) | Inicio de sesión seguro para clientes y trabajadores con username y contraseña cifrada. | Alta | Media
+
+RF6 | Cerrar sesión | Permitir cerrar sesión de forma segura terminando con todas las transacciones de ese usuario. | Media | Baja
+
+RF7 | Recuperar contraseña | Recuperación mediante correo o token seguro. | Media | Media
+
+RF8 | Crear rol | Crear roles de usuarios internos al sistema (administrador, vendedor, supervisor,). | Alta | Media
+
+RF9 | Modificar rol | Editar permisos y características de roles existentes como a que rol puede eliminar y añadir productos. | Alta | Media
+
+RF10 | Eliminar rol | Eliminar o inactivar roles que no se usan. | Baja | Media
+
+RF11 | Consultar roles | Listado y detalle de roles y permisos. | Media | Baja
+
+RF12 | Crear producto | Registrar producto (ácido acético, botellas, presentaciones) con precio, unidad y código. | Alta | Media
+
+RF13 | Modificar producto | Editar los datos de un producto registrado. | Alta | Media
+
+RF14 | Eliminar producto | Marcar producto como inactivo o eliminarlo según política(Se elimina el producto solo de el almacen pero permanece en los pedidos ya realizados). | Media | Media
+
+RF15 | Consultar productos | Búsqueda y filtrado por nombre, código, categoría y disponibilidad. | Alta | Baja
+
+RF16 | Crear categoría / presentación | Añadir categorías o presentaciones de producto. | Media | Media
+
+RF17 | Modificar categoría | Modificar datos de categoría o presentación. | Media | Media
+
+RF18 | Eliminar categoría | Eliminar o inactivar una categoría. | Baja | Media
+
+RF19 | Consultar categorías | Listado y filtrado de categorías/presentaciones. | Media | Baja
+
+RF20 | Crear pedido | Generar pedido con items, cantidades, precios, condiciones de entrega y cliente (por cliente o vendedor). | Alta | Media
+
+RF21 | Validar disponibilidad / reservar stock | Comprobar y reservar stock al crear el pedido. | Alta | Alta
+
+RF22 | Confirmar pedido provisional | Establecer estado "Pendiente" o "Reservado" tras verificación inicial. | Alta | Media
+
+RF23 | Modificar estado de pedido | Permitir cambiar estados: Pendiente, Reservado, Confirmado, Enviado, Entregado, Cancelado. | Alta | Media
+
+RF24 | Registrar pago | Registrar pagos totales o parciales y su método (transferencia, efectivo, tarjeta). | Alta | Alta
+
+RF25 | Pagar fraccionados / abonos | Permitir registrar múltiples abonos asociados a un mismo pedido y calcular saldo. | Alta | Alta
+
+RF26 | Verificar
+automáticamente  pagos | Validar pagos y actualizar estado del pedido automáticamente según reglas. | Alta | Alta
+
+RF27 | Generar recibo / comprobante de venta | Emitir comprobante digital (PDF) al confirmarse pago total o según política. | Alta | Media
+
+RF28 | Emitir nota de crédito / reembolso | Generar nota o comprobante en caso de devolución o ajuste económico. | Media | Alta
+
+RF29 | Iniciar devolución | Crear solicitud de devolución indicando motivo, estado y acciones a seguir. | Alta | Alta
+
+RF30 | Actualizar inventario por venta | Restar stock automáticamente al completar venta o según política de reserva. | Alta | Alta
+
+RF31 | Actualizar inventario por devolución | Incrementar stock al procesar devolución aceptada. | Alta | Media
+
+RF32 | Ajustar manualmente el inventario | Registrar entradas/egresos manuales por conteo físico u operaciones excepcionales. | Media | Media
+
+RF33 | Emitir alertas de stock mínimo | Generar notificaciones cuando el stock alcance niveles mínimos configurados. | Media | Media
+
+RF34 | Mantener histórico de pedidos y transacciones | Mantener registro completo de pedidos, pagos, devoluciones, ajustes y envíos. | Alta | Media
+
+RF35 | Generar reportes operativos básicos | Generar reportes: ventas, pedidos por estado, productos más vendidos, periodo. | Alta | Media
+
+RF36 | Exportar / importar datos (CSV/Excel) | Exportar listados y permitir importación inicial o masiva de productos/clientes. | Media | Media
+
+RF37 | Auditar  actividades | Registrar acciones de usuarios (creación, edición, eliminación) para trazabilidad. | Alta | Media
+
+RF38 | Notificar automáticamente | Enviar correos/SMS para notificar al admin al cierre del día de sus ganancias y cantidad de pedidos realizados en caso de no estar conectado en el  momento configurado. | Alta | Media
+
+RF39 | Emitir panel administrativo / dashboard | Mostrar indicadores claves del negocio(Ganancia promedio por pedido, ganancia total, cantidad de pedidos sin pagar, usuarios con más ventas, producto más devuelto) | Alta | Media
+
+RF40 | Emitir facturas legales | Generar factura legal conforme a normativa fiscal aplicable en caso de realizar una  venta mayorista a MYPIMEs o empresas estatales. | Alta | Alta
+
+RF41 | Mantener y configurar el sistema | Permitir configurar  parámetros en el sistema sistema: políticas de stock, condiciones de pago, formatos del recibo de pago. | Alta | Media
+
+Nombre
+HUO-1 Registro y acceso de clientes | Prioridad
+Alta | Tiempo estimado
+16
+
+Historia de Usuario	
+Como cliente potencial de la MYPIME
+Quiero registrarme en el sistema de forma segura con mis datos personales y de contacto
+Para poder gestionar mis pedidos y pagos de forma segura | Historia de Usuario	
+Como cliente potencial de la MYPIME
+Quiero registrarme en el sistema de forma segura con mis datos personales y de contacto
+Para poder gestionar mis pedidos y pagos de forma segura | Historia de Usuario	
+Como cliente potencial de la MYPIME
+Quiero registrarme en el sistema de forma segura con mis datos personales y de contacto
+Para poder gestionar mis pedidos y pagos de forma segura
+
+Criterio de aceptación
+CA1:Dado que el cliente no tiene cuenta, hace clic en el botón registrarme, cuando ingresa todos los datos obligatorios, con datos válidos, hago clic en registrarme y entonces se debe crear su cuenta y puede iniciar sesión, recuperar su contraseña y acceder a su perfil.
+CA2:Dado que el usuario esta registrado, al ingresar su contraseña y nombre de usuario validos y dar clic en el botón iniciar sesión es redirigido a la página de inicio.
+CA3:Dado que el usuario intenta iniciar sesión, al ingresar una contraseña o nombre de usuario no validos lanza un mensaje de usuario o contraseñas no validos.
+CA4:Dado que el usuario al registrarse deja vacios campos obligatorios o los rellena con información  no valida, se deniega el registro y muestra un mensaje de campos no validos o campos obligatorios.
+
+
+
+ | Criterio de aceptación
+CA1:Dado que el cliente no tiene cuenta, hace clic en el botón registrarme, cuando ingresa todos los datos obligatorios, con datos válidos, hago clic en registrarme y entonces se debe crear su cuenta y puede iniciar sesión, recuperar su contraseña y acceder a su perfil.
+CA2:Dado que el usuario esta registrado, al ingresar su contraseña y nombre de usuario validos y dar clic en el botón iniciar sesión es redirigido a la página de inicio.
+CA3:Dado que el usuario intenta iniciar sesión, al ingresar una contraseña o nombre de usuario no validos lanza un mensaje de usuario o contraseñas no validos.
+CA4:Dado que el usuario al registrarse deja vacios campos obligatorios o los rellena con información  no valida, se deniega el registro y muestra un mensaje de campos no validos o campos obligatorios.
+
+
+
+ | Criterio de aceptación
+CA1:Dado que el cliente no tiene cuenta, hace clic en el botón registrarme, cuando ingresa todos los datos obligatorios, con datos válidos, hago clic en registrarme y entonces se debe crear su cuenta y puede iniciar sesión, recuperar su contraseña y acceder a su perfil.
+CA2:Dado que el usuario esta registrado, al ingresar su contraseña y nombre de usuario validos y dar clic en el botón iniciar sesión es redirigido a la página de inicio.
+CA3:Dado que el usuario intenta iniciar sesión, al ingresar una contraseña o nombre de usuario no validos lanza un mensaje de usuario o contraseñas no validos.
+CA4:Dado que el usuario al registrarse deja vacios campos obligatorios o los rellena con información  no valida, se deniega el registro y muestra un mensaje de campos no validos o campos obligatorios.
+
+
+
+
+
+Nombre
+HUO-2 Gestión de roles y usuarios internos | Prioridad
+Alta | Tiempo estimado
+16
+
+Historia de Usuario	
+Como administrador de la MYPIME 
+Quiero añadir, eliminar, modificar y observar los roles y acciones de usuarios internos del sistema
+Para controlar quién accede a cada módulo del sistema y como lo hace. | Historia de Usuario	
+Como administrador de la MYPIME 
+Quiero añadir, eliminar, modificar y observar los roles y acciones de usuarios internos del sistema
+Para controlar quién accede a cada módulo del sistema y como lo hace. | Historia de Usuario	
+Como administrador de la MYPIME 
+Quiero añadir, eliminar, modificar y observar los roles y acciones de usuarios internos del sistema
+Para controlar quién accede a cada módulo del sistema y como lo hace.
+
+Criterio de aceptación
+CA1: Dado que soy administrador, cuando creo o edito un rol, entonces puedo definir sus permisos y asignarlo a empleados activos.
+CA2:Dado que soy el administrador si el estado de un usuario es activo al seleccionarlo y  hacer clic en el botón  revocar, pierde sus permisos de usuario y su estado pasa a inactivo.
+CA3:Dado que soy el administrador, puedo ver todos los usuarios activos he inactivos y sus permisos actuales.
+
+ | Criterio de aceptación
+CA1: Dado que soy administrador, cuando creo o edito un rol, entonces puedo definir sus permisos y asignarlo a empleados activos.
+CA2:Dado que soy el administrador si el estado de un usuario es activo al seleccionarlo y  hacer clic en el botón  revocar, pierde sus permisos de usuario y su estado pasa a inactivo.
+CA3:Dado que soy el administrador, puedo ver todos los usuarios activos he inactivos y sus permisos actuales.
+
+ | Criterio de aceptación
+CA1: Dado que soy administrador, cuando creo o edito un rol, entonces puedo definir sus permisos y asignarlo a empleados activos.
+CA2:Dado que soy el administrador si el estado de un usuario es activo al seleccionarlo y  hacer clic en el botón  revocar, pierde sus permisos de usuario y su estado pasa a inactivo.
+CA3:Dado que soy el administrador, puedo ver todos los usuarios activos he inactivos y sus permisos actuales.
+
+
+
+Nombre
+HUO-3 Gestión de productos | Prioridad
+Alta | Tiempo estimado(horas)
+32
+
+Historia de Usuario	
+Como administrador de la MYPIME
+Quiero añadir, eliminar, listar y modificar productos y sus categorías/presentaciones 
+Para mantener actualizado el inventario disponible y facilitar la vizualizacion de productos. | Historia de Usuario	
+Como administrador de la MYPIME
+Quiero añadir, eliminar, listar y modificar productos y sus categorías/presentaciones 
+Para mantener actualizado el inventario disponible y facilitar la vizualizacion de productos. | Historia de Usuario	
+Como administrador de la MYPIME
+Quiero añadir, eliminar, listar y modificar productos y sus categorías/presentaciones 
+Para mantener actualizado el inventario disponible y facilitar la vizualizacion de productos.
+
+Criterio de aceptación
+CA1: Dado que hago clic en el botón añadir producto, muestra un formulario con campos a rellenar, al rellenarse correctamente el formulario y hacer clic en el botón aceptar se agrega un producto.
+CA2: Dado que selecciono un producto y hago clic en el botón eliminar de stock, aparece una ventana de confirmación, al hacer clic en aceptar se desactiva ese producto, si presionas cancelar, el producto no se elimina
+ | Criterio de aceptación
+CA1: Dado que hago clic en el botón añadir producto, muestra un formulario con campos a rellenar, al rellenarse correctamente el formulario y hacer clic en el botón aceptar se agrega un producto.
+CA2: Dado que selecciono un producto y hago clic en el botón eliminar de stock, aparece una ventana de confirmación, al hacer clic en aceptar se desactiva ese producto, si presionas cancelar, el producto no se elimina
+ | Criterio de aceptación
+CA1: Dado que hago clic en el botón añadir producto, muestra un formulario con campos a rellenar, al rellenarse correctamente el formulario y hacer clic en el botón aceptar se agrega un producto.
+CA2: Dado que selecciono un producto y hago clic en el botón eliminar de stock, aparece una ventana de confirmación, al hacer clic en aceptar se desactiva ese producto, si presionas cancelar, el producto no se elimina
+
+
+Nombre
+HUO-4 Creación y procesamiento de pedidos | Prioridad
+Alta | Tiempo estimado
+16
+
+Historia de Usuario	
+Como cliente o vendedor de la MYPIME.
+Quiero crear pedidos con sus productos validar stock y confirmar su estado.
+Para formalizar ventas dentro del flujo comercial. | Historia de Usuario	
+Como cliente o vendedor de la MYPIME.
+Quiero crear pedidos con sus productos validar stock y confirmar su estado.
+Para formalizar ventas dentro del flujo comercial. | Historia de Usuario	
+Como cliente o vendedor de la MYPIME.
+Quiero crear pedidos con sus productos validar stock y confirmar su estado.
+Para formalizar ventas dentro del flujo comercial.
+
+Criterio de aceptación
+CA1: Dado que selecciono productos disponibles, cuando confirmo el pedido, entonces el sistema valida el stock y crea un pedido en estado pendiente.
+CA2: Dado que seleccione productos disponibles, cuando confirmo el pedido, si se introduce una cantidad de pago, si esta es en su totalidad el precio del producto, crea un pedido con estado pagado.
+
+ | Criterio de aceptación
+CA1: Dado que selecciono productos disponibles, cuando confirmo el pedido, entonces el sistema valida el stock y crea un pedido en estado pendiente.
+CA2: Dado que seleccione productos disponibles, cuando confirmo el pedido, si se introduce una cantidad de pago, si esta es en su totalidad el precio del producto, crea un pedido con estado pagado.
+
+ | Criterio de aceptación
+CA1: Dado que selecciono productos disponibles, cuando confirmo el pedido, entonces el sistema valida el stock y crea un pedido en estado pendiente.
+CA2: Dado que seleccione productos disponibles, cuando confirmo el pedido, si se introduce una cantidad de pago, si esta es en su totalidad el precio del producto, crea un pedido con estado pagado.
+
+
+
+Nombre
+HUO-5 Gestión de pagos y comprobantes | Prioridad
+Alta | Tiempo estimado
+24
+
+Historia de Usuario	
+Como cliente o vendedor.
+Quiero registrar pagos, generar recibos o notas de crédito.
+Para garantizar trazabilidad y soporte contable de las transacciones. | Historia de Usuario	
+Como cliente o vendedor.
+Quiero registrar pagos, generar recibos o notas de crédito.
+Para garantizar trazabilidad y soporte contable de las transacciones. | Historia de Usuario	
+Como cliente o vendedor.
+Quiero registrar pagos, generar recibos o notas de crédito.
+Para garantizar trazabilidad y soporte contable de las transacciones.
+
+Criterio de aceptación
+CA1: Dado que un pedido tiene pagos pendientes, cuando registro un pago o abono, entonces el saldo se actualiza y se genera el comprobante correspondiente.
+ 
+ | Criterio de aceptación
+CA1: Dado que un pedido tiene pagos pendientes, cuando registro un pago o abono, entonces el saldo se actualiza y se genera el comprobante correspondiente.
+ 
+ | Criterio de aceptación
+CA1: Dado que un pedido tiene pagos pendientes, cuando registro un pago o abono, entonces el saldo se actualiza y se genera el comprobante correspondiente.
+ 
+
+
+Nombre
+HUO-6
+Procesamiento de devoluciones | Prioridad
+Alta | Tiempo estimado
+8
+
+Historia de Usuario	
+Como cliente.
+Quiero solicitar devoluciones de pedidos
+Para ejercer mi derecho de devolución | Historia de Usuario	
+Como cliente.
+Quiero solicitar devoluciones de pedidos
+Para ejercer mi derecho de devolución | Historia de Usuario	
+Como cliente.
+Quiero solicitar devoluciones de pedidos
+Para ejercer mi derecho de devolución
+
+Criterio de aceptación
+CA1: Dado que el pedido fue entregado, cuando el cliente crea una solicitud con motivo válido, entonces el administrador evalúa y si la mercancía está en buen estado actualiza el stock.
+CA2: Dado que el pedido fue entregado, cuando el cliente crea una solicitud con motivo válido, entonces el administrador evalúa y si la mercancía está en mal estado entonces acepta la devolución y registra su motivo. | Criterio de aceptación
+CA1: Dado que el pedido fue entregado, cuando el cliente crea una solicitud con motivo válido, entonces el administrador evalúa y si la mercancía está en buen estado actualiza el stock.
+CA2: Dado que el pedido fue entregado, cuando el cliente crea una solicitud con motivo válido, entonces el administrador evalúa y si la mercancía está en mal estado entonces acepta la devolución y registra su motivo. | Criterio de aceptación
+CA1: Dado que el pedido fue entregado, cuando el cliente crea una solicitud con motivo válido, entonces el administrador evalúa y si la mercancía está en buen estado actualiza el stock.
+CA2: Dado que el pedido fue entregado, cuando el cliente crea una solicitud con motivo válido, entonces el administrador evalúa y si la mercancía está en mal estado entonces acepta la devolución y registra su motivo.
+
+Nombre
+HUO-7 Actualización y control de inventario | Prioridad
+Alta | Tiempo estimado
+8
+
+Historia de Usuario	
+Como encargado de almacén.
+Quiero mantener el inventario actualizado por ventas, devoluciones o ajustes manuales.
+Para reflejar existencias reales. | Historia de Usuario	
+Como encargado de almacén.
+Quiero mantener el inventario actualizado por ventas, devoluciones o ajustes manuales.
+Para reflejar existencias reales. | Historia de Usuario	
+Como encargado de almacén.
+Quiero mantener el inventario actualizado por ventas, devoluciones o ajustes manuales.
+Para reflejar existencias reales.
+
+Criterio de aceptación
+CA1: Dado que ocurre una venta, devolución o ajuste, cuando se ejecuta la operación, entonces el stock se recalcula y se generan alertas si hay niveles mínimos. | Criterio de aceptación
+CA1: Dado que ocurre una venta, devolución o ajuste, cuando se ejecuta la operación, entonces el stock se recalcula y se generan alertas si hay niveles mínimos. | Criterio de aceptación
+CA1: Dado que ocurre una venta, devolución o ajuste, cuando se ejecuta la operación, entonces el stock se recalcula y se generan alertas si hay niveles mínimos.
+
+Nombre
+HUO-8 Seguimiento histórico y reportes | Prioridad
+Alta | Tiempo estimado
+12
+
+Historia de Usuario	
+Como administrador.
+Quiero consultar el historial de transacciones y generar reportes de ventas o pedidos. 
+Para analizar el desempeño del negocio. | Historia de Usuario	
+Como administrador.
+Quiero consultar el historial de transacciones y generar reportes de ventas o pedidos. 
+Para analizar el desempeño del negocio. | Historia de Usuario	
+Como administrador.
+Quiero consultar el historial de transacciones y generar reportes de ventas o pedidos. 
+Para analizar el desempeño del negocio.
+
+Criterio de aceptación
+CA1: Dado que selecciono un rango de fechas, cuando genero un reporte, entonces se muestran los datos resumidos y exportables.
+CA2: Dado que selecciono un usuario trabajador siendo yo el administrador, se muestra un reporte de datos de todas las acciones del mismo. | Criterio de aceptación
+CA1: Dado que selecciono un rango de fechas, cuando genero un reporte, entonces se muestran los datos resumidos y exportables.
+CA2: Dado que selecciono un usuario trabajador siendo yo el administrador, se muestra un reporte de datos de todas las acciones del mismo. | Criterio de aceptación
+CA1: Dado que selecciono un rango de fechas, cuando genero un reporte, entonces se muestran los datos resumidos y exportables.
+CA2: Dado que selecciono un usuario trabajador siendo yo el administrador, se muestra un reporte de datos de todas las acciones del mismo.
+
+Nombre
+HUO-9 Integración del sistema | Prioridad
+Media
+ | Tiempo estimado
+24
+
+Historia de Usuario	
+Como administrador.
+Quiero importar/exportar datos, realizar copias de seguridad y exponer una API básica.
+Para facilitar integraciones y recuperación ante fallos. | Historia de Usuario	
+Como administrador.
+Quiero importar/exportar datos, realizar copias de seguridad y exponer una API básica.
+Para facilitar integraciones y recuperación ante fallos. | Historia de Usuario	
+Como administrador.
+Quiero importar/exportar datos, realizar copias de seguridad y exponer una API básica.
+Para facilitar integraciones y recuperación ante fallos.
+
+Criterio de aceptación
+CA1: Dado que ejecuto una operación de mantenimiento, cuando la configuro y confirmo, entonces los datos se procesan correctamente, registrando logs y notificaciones.
+
+
+
+ | Criterio de aceptación
+CA1: Dado que ejecuto una operación de mantenimiento, cuando la configuro y confirmo, entonces los datos se procesan correctamente, registrando logs y notificaciones.
+
+
+
+ | Criterio de aceptación
+CA1: Dado que ejecuto una operación de mantenimiento, cuando la configuro y confirmo, entonces los datos se procesan correctamente, registrando logs y notificaciones.
+
+
+
+
+
+Nombre
+HUO-10 Listar clientes | Prioridad
+Alta | Tiempo estimado
+16
+
+Historia de Usuario	
+Como vendedor o administrador de la MYPIME
+Quiero listar los clientes activos.
+Para controlar la realización de pedidos y los clientes de mayores compras. | Historia de Usuario	
+Como vendedor o administrador de la MYPIME
+Quiero listar los clientes activos.
+Para controlar la realización de pedidos y los clientes de mayores compras. | Historia de Usuario	
+Como vendedor o administrador de la MYPIME
+Quiero listar los clientes activos.
+Para controlar la realización de pedidos y los clientes de mayores compras.
+
+Criterio de aceptación
+CA1: Dado que accedo a la lista se mostrarán todos los clientes del sistema en paginado de 20 en 20
+
+ | Criterio de aceptación
+CA1: Dado que accedo a la lista se mostrarán todos los clientes del sistema en paginado de 20 en 20
+
+ | Criterio de aceptación
+CA1: Dado que accedo a la lista se mostrarán todos los clientes del sistema en paginado de 20 en 20
+
+
+
+Nombre
+HUO-11 Administrar cuenta cliente | Prioridad
+Alta | Tiempo estimado
+16
+
+Historia de Usuario	
+Como cliente de la MYPIME.
+Quiero eliminar o modificar cliente.
+Para cambiar a otra plataforma. | Historia de Usuario	
+Como cliente de la MYPIME.
+Quiero eliminar o modificar cliente.
+Para cambiar a otra plataforma. | Historia de Usuario	
+Como cliente de la MYPIME.
+Quiero eliminar o modificar cliente.
+Para cambiar a otra plataforma.
+
+Criterio de aceptación
+CA1: Dado que estoy registrado y entro a mi perfil de cliente, hago clic en eliminar cuenta y aceptar la checkbox la cuenta se desactiva
+CA2: Dado que estoy registrado y entro a mi perfil de cliente, hago clic en modificar parámetros, introduzco los nuevos valores y al aceptar se cambian los datos del cliente.
+
+ | Criterio de aceptación
+CA1: Dado que estoy registrado y entro a mi perfil de cliente, hago clic en eliminar cuenta y aceptar la checkbox la cuenta se desactiva
+CA2: Dado que estoy registrado y entro a mi perfil de cliente, hago clic en modificar parámetros, introduzco los nuevos valores y al aceptar se cambian los datos del cliente.
+
+ | Criterio de aceptación
+CA1: Dado que estoy registrado y entro a mi perfil de cliente, hago clic en eliminar cuenta y aceptar la checkbox la cuenta se desactiva
+CA2: Dado que estoy registrado y entro a mi perfil de cliente, hago clic en modificar parámetros, introduzco los nuevos valores y al aceptar se cambian los datos del cliente.
+
+
+
+Historia de usuario
+ | Requisitos Asociados
+
+
+Registro y acceso de clientes | RF1, RF5, RF6, RF7
+
+Gestión de roles y usuarios internos | RF8, RF9, RF10, RF11
+
+Administración del catálogo de productos | RF12, RF13, RF14, RF15, RF16, RF17, RF18, RF19
+
+Creación y procesamiento de pedidos | RF20, RF21, RF22, RF23
+
+Gestión de pagos y comprobantes | RF24, RF25, RF26, RF27, RF28, RF40
+
+Procesamiento de devoluciones | RF29, RF31
+
+Actualización y control de inventario | RF30, RF32, RF33
+
+Seguimiento histórico y reportes | RF34, RF35
+
+Integración del sistema | RF36, RF37, RF38, RF39, RF41
+
+Administrar cuenta cliente | RF2, RF3
+
+Listar clientes | RF4
+
+No. | Nombre de la Clase
+ | Descripción
+
+ | Cliente | Usuario externo que interactúa con el Sistema realizando pedidos
+
+ | Pedido
+ | Conjunto de productos solicitados por el usuario
+
+ | Producto
+ | Ácido acético y botellas plásticas
+
+ | Usuario interno | Vendedor, supervisor o administrador, interactúan de forma directa con el sistema
+
+ | Historial | Acciones realizadas por los usuarios internos, tiene como objetivo controlarlos, solo puede acceder el administrador
+
+ | Devoluciones | Acción realizada por un cliente donde devolver un pedido, se analiza si aceptar la devolución o no
+
+ | Pagos | Pagos realizados por un cliente a un pedido, pueden ser por partes y desde varias cuentas bancarias
